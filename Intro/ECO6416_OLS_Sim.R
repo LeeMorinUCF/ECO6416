@@ -1,26 +1,26 @@
 ##################################################
-# 
+#
 # ECO 6416.0028 Applied Business Research Tools
-# 
+#
 # OLS Regression Demo
 # Regression with Simulated Data
-# 
+#
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
 # College of Business Administration
 # University of Central Florida
-# 
-# August 29, 2019
-# 
+#
+# August 31, 2020
+#
 ##################################################
-# 
-# ECO6416_OLS_Demo gives an example of OLS regression
+#
+# ECO6416_OLS_Sim gives an example of OLS regression
 #   using simulated data.
-# 
+#
 # Dependencies:
-#   ECO6416_Sim_Data.R
-# 
+#   ECO6416_tools.R
+#
 ##################################################
 
 
@@ -32,21 +32,26 @@
 rm(list=ls(all=TRUE))
 
 # Set working directory.
-# wd_path <- '/path/to/your/folder' 
-wd_path <- 'C:/Users/le279259/Documents/Teaching/ECO6416_Fall2019/Module03' # On Windows
-
+# wd_path <- '/path/to/your/folder'
+# Make sure to spell it correctly and use forward slashes.
+# For example:
+wd_path <- 'C:/Users/le279259/Desktop/ECO6416_Demos/Module02'
+# Note that my folder is different because it depends on where I store my files.
 setwd(wd_path)
 
 # Or do this in one step (using buttons in  File panel).
-setwd("~/Teaching/ECO6416_Fall2019/Module03")
+# The copy the command that appears in the console and paste it here.
+# setwd("C:/Users/le279259/Desktop/ECO6416_Demos/Module02")
+
 
 # No libraries required.
 # Otherwise would have a command like the following.
 # library(name_of_R_package)
+# We will use this later in the course.
 
-# Read function for sampling data. 
-source('ECO6416_Sim_Data.R')
-# This is the same as running the ECO6416_Sim_Data.R script first.
+# Read function for sampling data.
+source('ECO6416_tools.R')
+# This is the same as running the ECO6416_tools.R script first.
 # It assumes that the script is saved in the same working folder.
 
 
@@ -73,7 +78,7 @@ pct_in_cali <- 0.5
 prob_earthquake <- 0.05
 
 # Additional terms:
-sigma_2 <- 0.1        # Variance of error term
+sigma_2 <- 0.1      # Variance of error term
 num_obs <- 100      # Number of observations in dataset
 
 
@@ -81,9 +86,9 @@ num_obs <- 100      # Number of observations in dataset
 # Generating the Data
 ##################################################
 
-# Call the housing_sample function from ECO6416_Sim_Data.R. 
-housing_data <- housing_sample(beta_0, beta_income, beta_cali, beta_earthquake, 
-                               avg_income, sd_income, pct_in_cali, prob_earthquake, 
+# Call the housing_sample function from ECO6416_Sim_Data.R.
+housing_data <- housing_sample(beta_0, beta_income, beta_cali, beta_earthquake,
+                               avg_income, sd_income, pct_in_cali, prob_earthquake,
                                sigma_2, num_obs)
 
 
@@ -101,7 +106,7 @@ table(housing_data[, 'in_cali'], housing_data[, 'earthquake'])
 ##################################################
 
 # Estimate a regression model.
-lm_model <- lm(data = housing_data, 
+lm_model <- lm(data = housing_data,
                formula = house_price ~ income + in_cali + earthquake)
 
 # Output the results to screen.
@@ -114,25 +119,27 @@ summary(lm_model)
 # Generate another dataset and save it
 ##################################################
 
-# Call the housing_sample function from ECO6416_Sim_Data.R. 
-housing_data_2 <- housing_sample(beta_0, beta_income, beta_cali, beta_earthquake, 
-                               avg_income, sd_income, pct_in_cali, prob_earthquake, 
+# Call the housing_sample function from ECO6416_Sim_Data.R.
+housing_data_2 <- housing_sample(beta_0, beta_income, beta_cali, beta_earthquake,
+                               avg_income, sd_income, pct_in_cali, prob_earthquake,
                                sigma_2, num_obs)
 
-# Save this to disk. 
+# Save this to disk.
 write.csv(housing_data_2, file = 'housing_data.csv')
 
 
 
 ##################################################
 # Read the dataset and run another regression
+# This is the same process you will follow when
+# reading in a dataset obtained from any other source.
 ##################################################
 
 # Read the newly saved dataset.
 housing_data_3 <- read.csv(file = 'housing_data.csv')
 
 # Estimate a regression model.
-lm_model_3 <- lm(data = housing_data_3, 
+lm_model_3 <- lm(data = housing_data_3,
                formula = house_price ~ income + in_cali + earthquake)
 
 # Output the results to screen.
