@@ -1,23 +1,23 @@
 ##################################################
-# 
-# ECO 5445: Introduction to Business Analytics
-# 
+#
+# ECO 6416.0028 Applied Business Research Tools
+#
 # OLS Regression Demo
 # Examples of Model Specfication
-# 
+#
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
 # College of Business Administration
 # University of Central Florida
-# 
-# October 30, 2018
-# 
+#
+# September 9, 2020
+#
 ##################################################
-# 
+#
 # ECO5445_Model_Spec gives examples of OLS regression models
 #   by considering a number of different model specifications.
-# 
+#
 ##################################################
 
 
@@ -40,12 +40,16 @@ rm(list=ls(all=TRUE))
 
 # Set path for working directory.
 # Put files on desktop in a folder called ECO6416
-wd_path <- 'C:/Users/le279259/Desktop/ECO6416'
+# wd_path <- 'C:/Users/le279259/Desktop/ECO6416/Model_Spec'
 # Modify the above line according to the specific path on your computer,
 # as in:
 # wd_path <- 'C:/Users/name/of/your/path'
 
-setwd(wd_path)
+# Set the working directory to this path.
+# setwd(wd_path)
+
+# Or set the working directory in one command:
+setwd("C:/Users/le279259/Desktop/ECO6416/Model_Spec")
 
 getwd()
 
@@ -58,7 +62,7 @@ tractor_sales <- read.csv('TRACTOR7.csv')
 
 # Inspect the contents.
 summary(tractor_sales)
-# Make sure there are no problems with the data. 
+# Make sure there are no problems with the data.
 
 
 ##################################################
@@ -66,22 +70,22 @@ summary(tractor_sales)
 ##################################################
 
 # You can create new variables in two ways:
-# 1. Add commands within this program 
+# 1. Add commands within this program
 #     (as for log_saleprice and squared_horsepower below).
-# 2. Create new columns in a spreadsheet. 
+# 2. Create new columns in a spreadsheet.
 
 hist(tractor_sales[, 'saleprice'])
 # Notice that there are some very large values.
-# Consider taking logs to bring outliers closer to the others. 
+# Consider taking logs to bring outliers closer to the others.
 
 tractor_sales[, 'log_saleprice'] <- log(tractor_sales[, 'saleprice'])
 
 # Now plot the histogram for log of saleprice:
 hist(tractor_sales[, 'log_saleprice'])
-# Much better behaved. Looks almost normal. 
+# Much better behaved. Looks almost normal.
 
 # Create a variable squared_horsepower
-# to investigate quadratic relationship of sale price to horsepower. 
+# to investigate quadratic relationship of sale price to horsepower.
 tractor_sales[, 'squared_horsepower'] <- tractor_sales[, 'horsepower']^2
 
 
@@ -91,9 +95,9 @@ tractor_sales[, 'squared_horsepower'] <- tractor_sales[, 'horsepower']^2
 ##################################################
 
 # Estimate a regression model.
-lm_model_1 <- lm(data = tractor_sales, 
+lm_model_1 <- lm(data = tractor_sales,
                  formula = saleprice ~ horsepower + age + enghours +
-                   diesel + fwd + manual + johndeere + 
+                   diesel + fwd + manual + johndeere +
                    spring + summer + winter)
 
 # Output the results to screen.
@@ -106,9 +110,9 @@ summary(lm_model_1)
 ##################################################
 
 # Estimate a regression model.
-lm_model_2 <- lm(data = tractor_sales, 
+lm_model_2 <- lm(data = tractor_sales,
                  formula = log_saleprice ~ horsepower + age + enghours +
-                   diesel + fwd + manual + johndeere + 
+                   diesel + fwd + manual + johndeere +
                    spring + summer + winter)
 
 # Output the results to screen.
@@ -128,7 +132,7 @@ summary(tractor_sales[tractor_sales[, 'johndeere'] == 0, 'saleprice'])
 ##################################################
 
 # Estimate a regression model.
-lm_model_3 <- lm(data = tractor_sales, 
+lm_model_3 <- lm(data = tractor_sales,
                  formula = log_saleprice ~ horsepower + age + enghours +
                    diesel + fwd + manual + johndeere)
 
@@ -143,7 +147,7 @@ summary(lm_model_3)
 ##################################################
 
 # Estimate a regression model.
-lm_model_4 <- lm(data = tractor_sales, 
+lm_model_4 <- lm(data = tractor_sales,
                  formula = log_saleprice ~ horsepower + age + enghours +
                    diesel + fwd + johndeere)
 
@@ -152,27 +156,27 @@ summary(lm_model_4)
 
 
 ##################################################
-# 
+#
 # Exercise:
-# 
+#
 # Consider a polynomial functional form for horsepower.
 # Idea: Horsepower improves performance up to a limit,
 # then extra power does not add value, only consumes more fuel.
-# 
-# 1. Generate the squared variable. 
+#
+# 1. Generate the squared variable.
 # 2. Hypothesize the signs.
 # 3. Add the squared horsepower term to the regression equation.
-# 4. Estimate the revised model. 
+# 4. Estimate the revised model.
 # 5. Analyze the resulting estimates.
-# 6. Make recommendation for the new model. 
-# 
+# 6. Make recommendation for the new model.
+#
 ##################################################
 
 
 
 # Estimate a regression model.
-lm_model_5 <- lm(data = tractor_sales, 
-                 formula = log_saleprice ~ horsepower + squared_horsepower + 
+lm_model_5 <- lm(data = tractor_sales,
+                 formula = log_saleprice ~ horsepower + squared_horsepower +
                    age + enghours +
                    diesel + fwd + johndeere)
 

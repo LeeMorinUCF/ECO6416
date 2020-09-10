@@ -207,9 +207,14 @@ print(RSS_constrained)
 #
 ##################################################
 
+# Need sample size and number of variables.
 
+num_obs <- nrow(tractor_sales)
+num_vars <- 12
 
-
+F_stat <- (RSS_constrained - RSS_unconstrained)/3 /
+  RSS_unconstrained*(num_obs - num_vars - 1)
+print(F_stat)
 
 ##################################################
 # Estimating a Regression Model
