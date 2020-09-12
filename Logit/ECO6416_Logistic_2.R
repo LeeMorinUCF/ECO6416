@@ -1,23 +1,23 @@
 ##################################################
-# 
+#
 # ECO 6416: Applied Business Research Tools
-# 
+#
 # Logistic Regression Demo
-# Examples of Model Specfication
-# 
+# Examples of Model Specification
+#
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
 # College of Business Administration
 # University of Central Florida
-# 
-# October 30, 2018
-# 
+#
+# September 10, 2020
+#
 ##################################################
-# 
-# ECO5445_Logistic gives an example of a logistic regression models
+#
+# ECO6416_Logistic gives an example of a logistic regression models
 #   and compares with linear model specifications.
-# 
+#
 ##################################################
 
 
@@ -41,12 +41,12 @@ library(pROC)
 # Set path for working directory.
 # One option: Put files on desktop in a folder called Data
 # wd_path <- 'C:/Users/le279259/Desktop/Data'
-# Other option: Put files in a path and set it as your working directory. 
-wd_path <- 'C:/Users/le279259/Documents/Teaching/ECO6416_Fall2018/Data'
-# Set the working directory to this path. 
+# Other option: Put files in a path and set it as your working directory.
+wd_path <- 'C:/Users/le279259/Desktop/ECO6416/Logit'
+# Set the working directory to this path.
 setwd(wd_path)
 
-# Verify that the path was assigned correctly. 
+# Verify that the path was assigned correctly.
 getwd()
 
 
@@ -54,7 +54,7 @@ getwd()
 # Loading the Data
 ##################################################
 
-# A sample dataset to predict patients' choice of hospital. 
+# A sample dataset to predict patients' choice of hospital.
 hospital_choice <- read.csv('HOSPITAL13.csv')
 
 # Inspect the contents.
@@ -62,15 +62,15 @@ summary(hospital_choice)
 
 # Variables include:
 # D to indicate whether a patient chose Cedars Sinai, 0 if they chose UCLA
-# DISTANCE is the excess distance from the patients home to Cedars Sinai 
+# DISTANCE is the excess distance from the patients home to Cedars Sinai
 #   minus the distance to UCLA
 # INCOME is the average income in the zip code in thousands
 # OLD is an indicator for whether the patient is older than 75
 
 
 
-# Compare the distributions of variables 
-# for classes of the dependent variable. 
+# Compare the distributions of variables
+# for classes of the dependent variable.
 summary(hospital_choice[hospital_choice[, 'D'] == 0, ])
 summary(hospital_choice[hospital_choice[, 'D'] == 1, ])
 
@@ -79,7 +79,7 @@ summary(hospital_choice[hospital_choice[, 'D'] == 1, ])
 # Generating New Variables
 ##################################################
 
-# Can do this in a spreadsheet or within this program. 
+# Can do this in a spreadsheet or within this program.
 
 
 ##################################################
@@ -88,7 +88,7 @@ summary(hospital_choice[hospital_choice[, 'D'] == 1, ])
 ##################################################
 
 # Estimate a regression model.
-lm_model_1 <- lm(data = hospital_choice, 
+lm_model_1 <- lm(data = hospital_choice,
                  formula = D ~ DISTANCE + INCOME + OLD)
 
 # Output the results to screen.
@@ -98,7 +98,7 @@ summary(lm_model_1)
 hospital_choice[, 'D_hat_lm'] <- predict(lm_model_1)
 
 summary(hospital_choice[, 'D_hat_lm'])
-# Anything look unusual?
+# Does anything look unusual?
 
 
 ##################################################
@@ -107,8 +107,8 @@ summary(hospital_choice[, 'D_hat_lm'])
 ##################################################
 
 # Estimate a logistic regression model.
-logit_model_1 <- glm(data = hospital_choice, 
-                     formula = D ~ DISTANCE + INCOME + OLD, 
+logit_model_1 <- glm(data = hospital_choice,
+                     formula = D ~ DISTANCE + INCOME + OLD,
                      family = 'binomial')
 
 # Output the results to screen.
@@ -128,26 +128,26 @@ summary(hospital_choice[, 'D_hat_logit'])
 ##################################################
 
 # Calculate the AUROC for the logistic model.
-roc(response = hospital_choice[, 'D'], 
+roc(response = hospital_choice[, 'D'],
     predictor = hospital_choice[, 'D_hat_logit'])
 
 
 # Compare this to the estimate for the linear model.
-roc(response = hospital_choice[, 'D'], 
+roc(response = hospital_choice[, 'D'],
     predictor = hospital_choice[, 'D_hat_lm'])
 
 
 # This statistic is best used to compare different models
 # with different predictor variables,
-# as in the following exercise. 
+# as in the following exercise.
 
 
 ##################################################
-# 
+#
 # Exercise:
-# See if you can improve upon this model. 
-# 
-# 
+# See if you can improve upon this model.
+#
+#
 ##################################################
 
 

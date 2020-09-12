@@ -1,24 +1,24 @@
 ##################################################
-# 
+#
 # ECO 6416: Applied Business Research Tools
-# 
+#
 # OLS Regression Demo
 # Detecting and Correcting for Serial Correlation
-# 
+#
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
 # College of Business Administration
 # University of Central Florida
-# 
-# November 9, 2018
-# 
+#
+# September 10, 2020
+#
 ##################################################
-# 
+#
 # ECO6416_Serial_Correlation gives an example of an OLS regression model
 #   with serial correlation and corrects it with GLS estimation
 #   and by calculating Newey-West standard errors.
-# 
+#
 ##################################################
 
 
@@ -53,10 +53,10 @@ wd_path <- 'C:/Users/le279259/Desktop/ECO6416'
 # as in:
 # wd_path <- 'C:/Users/name/of/your/path'
 
-# Set the working directory to this path. 
+# Set the working directory to this path.
 setwd(wd_path)
 
-# Verify that the path was assigned correctly. 
+# Verify that the path was assigned correctly.
 getwd()
 
 
@@ -66,18 +66,18 @@ getwd()
 
 # Variable definitions in CONS9.csv:
 # year: year t
-# con: Real personal consumption expenditures in year t, billions of 2009 dollars. 
+# con: Real personal consumption expenditures in year t, billions of 2009 dollars.
 # dpi: Real disposable personal income in year t, billions of 2009 dollars.
-# aaa: The real interest rate on AAA corporate bonds in year t. 
+# aaa: The real interest rate on AAA corporate bonds in year t.
 
 cons_data <- read.csv('CONS9.csv')
 # cons_data <- read.csv("C:/Users/le279259/Desktop/ECO6416/CONS9.csv")
 
 # Inspect the contents.
 summary(cons_data)
-# Make sure there are no problems with the data. 
+# Make sure there are no problems with the data.
 
-# Inspect the dependent variable. 
+# Inspect the dependent variable.
 hist(cons_data[, 'con'])
 plot(cons_data[, 'con'])
 lines(cons_data[, 'dpi'])
@@ -92,7 +92,7 @@ cor(cons_data[, list_of_variables])
 # Calculate N and K (we'll need them later).
 # N:
 num_obs <- nrow(cons_data)
-# K: 
+# K:
 num_vars <- length(list_of_variables)
 
 
@@ -101,8 +101,8 @@ num_vars <- length(list_of_variables)
 ##################################################
 
 # You can create new variables in two ways:
-# 1. Add commands within this program 
-# 2. Create new columns in a spreadsheet 
+# 1. Add commands within this program
+# 2. Create new columns in a spreadsheet
 #   (but you would need to re-load the dataset
 #   after adding variables this way)
 
@@ -116,7 +116,7 @@ num_vars <- length(list_of_variables)
 ##################################################
 
 # Estimate a regression model.
-lm_model_1 <- lm(data = cons_data, 
+lm_model_1 <- lm(data = cons_data,
                  formula = con ~ dpi + aaa)
 
 # Output the results to screen.
@@ -135,44 +135,44 @@ cons_data[, 'con_hat'] <- predict(lm_model_1)
 # between the observed con and the predictions.
 cons_data[, 'con_resid'] <- cons_data[, 'con'] - cons_data[, 'con_hat']
 
-# Plot the residuals over time. 
-plot(cons_data[, 'year'], cons_data[, 'con_resid'], 
-     main = 'OLS Residuals over Time', 
-     xlab = 'Year', 
+# Plot the residuals over time.
+plot(cons_data[, 'year'], cons_data[, 'con_resid'],
+     main = 'OLS Residuals over Time',
+     xlab = 'Year',
      ylab = 'Residual')
-# Looks like positive serial correlation. 
+# Looks like positive serial correlation.
 
 
-# Generate a lagged version of the residuals. 
+# Generate a lagged version of the residuals.
 cons_data[, 'con_resid_lag'] <- c(NA, cons_data[1:(num_obs - 1), 'con_resid'])
 # View the data to verify.
 
 # Plot the residuals to check for a relationship.
-plot(cons_data[, 'con_resid_lag'], cons_data[, 'con_resid'], 
-     main = 'OLS Residuals vs Lagged Residuals', 
-     xlab = 'Lagged Residual', 
+plot(cons_data[, 'con_resid_lag'], cons_data[, 'con_resid'],
+     main = 'OLS Residuals vs Lagged Residuals',
+     xlab = 'Lagged Residual',
      ylab = 'Residual')
-# Again, looks like positive serial correlation. 
+# Again, looks like positive serial correlation.
 
 
 
 # Formal test with Durbin-Watson statistic.
 # Formula is just like lm() function for regression.
-dwtest(data = cons_data, 
+dwtest(data = cons_data,
        formula = con ~ dpi + aaa)
 
 
 # Formal test with LM statistic.
-# First run regression of residuals on all variables 
+# First run regression of residuals on all variables
 # and lagged errors.
-lm_model_lm_test <- lm(data = cons_data, 
+lm_model_lm_test <- lm(data = cons_data,
                        formula = con_resid ~ dpi + aaa + con_resid_lag)
 
 # Output the results to screen as usual.
 summary(lm_model_lm_test)
 
 # Test for coefficient on lagged residual is N*R^2.
-# Compare to critical value for chi-squared with 1 degree of freedom. 
+# Compare to critical value for chi-squared with 1 degree of freedom.
 
 
 ##################################################
@@ -187,8 +187,8 @@ summary(lm_model_lm_test)
 # Calculate the Newey-West Standard Errors
 ##################################################
 
-# Standard erros are the square root of the 
-# Newey-West covariance matrix. 
+# Standard erros are the square root of the
+# Newey-West covariance matrix.
 
 
 NW_se <- sqrt(diag(NeweyWest(lm_model_1)))
@@ -207,7 +207,7 @@ lm_stats_NW[, 't value'] <- lm_stats_NW[, 'Estimate'] / lm_stats_NW[, 'Std. Erro
 lm_stats_NW[, 'Pr(>|t|)'] <- 2*pt(- abs(lm_stats_NW[, 't value']),
                                   df = num_obs - num_vars - 1)
 
-# Display the adjusted regression statistics. 
+# Display the adjusted regression statistics.
 print(lm_stats_NW)
 # Compare to the originals.
 coef(summary(lm_model_1))
@@ -226,8 +226,8 @@ coef(summary(lm_model_1))
 
 # Three steps:
 # 1. Estimate model of residuals on lagged residuals.
-# 2. Generate adjusted variables. 
-# 3. Estimate GLS regression model. 
+# 2. Generate adjusted variables.
+# 3. Estimate GLS regression model.
 
 
 ##################################################
@@ -236,7 +236,7 @@ coef(summary(lm_model_1))
 ##################################################
 
 # Estimate a regression model.
-lm_model_2 <- lm(data = cons_data, 
+lm_model_2 <- lm(data = cons_data,
                  formula = con_resid ~ con_resid_lag)
 
 # Output the results to screen.
@@ -249,18 +249,18 @@ rho <- coef(summary(lm_model_2))['con_resid_lag', 'Estimate']
 # Create the adjusted GLS variables
 ##################################################
 
-# Each variable is the original, less rho times the lagged value. 
-cons_data[, 'con_GLS'] <- cons_data[, 'con'] - 
+# Each variable is the original, less rho times the lagged value.
+cons_data[, 'con_GLS'] <- cons_data[, 'con'] -
   rho*c(NA, cons_data[1:(num_obs - 1), 'con'])
 
-cons_data[, 'dpi_GLS'] <- cons_data[, 'dpi'] - 
+cons_data[, 'dpi_GLS'] <- cons_data[, 'dpi'] -
   rho*c(NA, cons_data[1:(num_obs - 1), 'dpi'])
 
-cons_data[, 'aaa_GLS'] <- cons_data[, 'aaa'] - 
+cons_data[, 'aaa_GLS'] <- cons_data[, 'aaa'] -
   rho*c(NA, cons_data[1:(num_obs - 1), 'aaa'])
 
-# The intercept coefficient is not important but it doesn't hurt 
-# to change the units to match the original regression. 
+# The intercept coefficient is not important but it doesn't hurt
+# to change the units to match the original regression.
 cons_data[, 'Intercept'] <- 1 - rho
 
 
@@ -272,7 +272,7 @@ cons_data[, 'Intercept'] <- 1 - rho
 
 
 # Estimate a regression model.
-lm_model_3 <- lm(data = cons_data, 
+lm_model_3 <- lm(data = cons_data,
                  formula = con_GLS ~ Intercept + dpi_GLS + aaa_GLS - 1)
 # Note: The '- 1' excludes the intercept, since we have included an adjusted intercept.
 
@@ -297,24 +297,24 @@ cons_data[, 'con_hat_GLS'] <- c(NA, predict(lm_model_3))
 # between the observed con and the predictions.
 cons_data[, 'con_resid_GLS'] <- cons_data[, 'con_GLS'] - cons_data[, 'con_hat_GLS']
 
-# Plot the residuals over time. 
-plot(cons_data[, 'year'], cons_data[, 'con_resid_GLS'], 
-     main = 'GLS Residuals over Time', 
-     xlab = 'Year', 
+# Plot the residuals over time.
+plot(cons_data[, 'year'], cons_data[, 'con_resid_GLS'],
+     main = 'GLS Residuals over Time',
+     xlab = 'Year',
      ylab = 'Residual')
-# Not much remains of the positive serial correlation. 
+# Not much remains of the positive serial correlation.
 
 
-# Generate a lagged version of the residuals. 
+# Generate a lagged version of the residuals.
 cons_data[, 'con_resid_lag_GLS'] <- c(NA, cons_data[1:(num_obs - 1), 'con_resid_GLS'])
 # View the data to verify.
 
 # Plot the residuals to check for a relationship.
-plot(cons_data[, 'con_resid_lag_GLS'], cons_data[, 'con_resid_GLS'], 
-     main = 'GLS Residuals vs Lagged Residuals', 
-     xlab = 'Lagged Residual', 
+plot(cons_data[, 'con_resid_lag_GLS'], cons_data[, 'con_resid_GLS'],
+     main = 'GLS Residuals vs Lagged Residuals',
+     xlab = 'Lagged Residual',
      ylab = 'Residual')
-# Not much trace of the positive serial correlation. 
+# Not much trace of the positive serial correlation.
 
 
 

@@ -1,23 +1,23 @@
 ##################################################
-# 
-# ECO 5445: Introduction to Business Analytics
-# 
+#
+# ECO 6416: Applied Business Research Tools
+#
 # OLS Regression Demo
 # Examples of Model Specfication
-# 
+#
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
 # College of Business Administration
 # University of Central Florida
-# 
-# October 30, 2018
-# 
+#
+# September 10, 2020
+#
 ##################################################
-# 
-# ECO5445_Model_Spec gives examples of OLS regression models
+#
+# ECO6416_Life_Exp_a5_w_VIF gives examples of OLS regression models
 #   by considering a number of different model specifications.
-# 
+#
 ##################################################
 
 
@@ -40,15 +40,15 @@ rm(list=ls(all=TRUE))
 
 # Set path for working directory.
 # Put files on desktop in a folder called ECO6416
-wd_path <- 'C:/Users/le279259/Desktop/ECO6416'
+wd_path <- 'C:/Users/le279259/Desktop/ECO6416/Logit'
 # Modify the above line according to the specific path on your computer,
 # as in:
 # wd_path <- 'C:/Users/name/of/your/path'
 
-# Set the working directory to this path. 
+# Set the working directory to this path.
 setwd(wd_path)
 
-# Verify that the path was assigned correctly. 
+# Verify that the path was assigned correctly.
 getwd()
 
 
@@ -57,13 +57,13 @@ getwd()
 ##################################################
 
 life_exp_data <- read.csv('LIFE5.csv')
-# life_exp_data <- read.csv("C:/Users/le279259/Desktop/ECO6416/LIFE5.csv")
+# life_exp_data <- read.csv("C:/Users/le279259/Desktop/ECO6416_Demos/Data/LIFE5.csv")
 
 # Inspect the contents.
 summary(life_exp_data)
-# Make sure there are no problems with the data. 
+# Make sure there are no problems with the data.
 
-# Inspect the dependent variable. 
+# Inspect the dependent variable.
 hist(life_exp_data[, 'lifeexpect'])
 
 # Inspect the correlations between numeric explanatory variables.
@@ -84,33 +84,33 @@ rownames(vif_results) <- list_of_variables
 
 # Estimate regression models in a loop in explanatory variables.
 for (variable_name in list_of_variables) {
-  
-  
+
+
   # Specify the formula for the VIF regression.
   other_variables <- list_of_variables[list_of_variables != variable_name]
-  
-  vif_formula <- as.formula(paste0(variable_name, ' ~ ', 
+
+  vif_formula <- as.formula(paste0(variable_name, ' ~ ',
                                    paste(other_variables, collapse = ' + ')))
-  
+
   # Print out the regression results.
   print('Now estimating the VIF regression: ')
   print(vif_formula)
-  
+
   # Estimate the regression of this variable on all the others.
-  lm_model_vif <- lm(data = life_exp_data, 
+  lm_model_vif <- lm(data = life_exp_data,
                    formula = vif_formula)
-  
+
   print(summary(lm_model_vif))
-  
+
   # Store the R^2.
   vif_results[variable_name, 'r_squared'] <- summary(lm_model_vif)$r.squared
-  
+
 }
 
-# Calculate the VIF from the R^2 statistics. 
+# Calculate the VIF from the R^2 statistics.
 vif_results[, 'VIF'] <- 1/(1 - vif_results[, 'r_squared'])
 
-# The resulting R^2 values are: 
+# The resulting R^2 values are:
 print(vif_results)
 
 
@@ -119,8 +119,8 @@ print(vif_results)
 ##################################################
 
 # You can create new variables in two ways:
-# 1. Add commands within this program 
-# 2. Create new columns in a spreadsheet 
+# 1. Add commands within this program
+# 2. Create new columns in a spreadsheet
 #   (but you would need to re-load the dataset
 #   after adding variables this way)
 
@@ -134,8 +134,8 @@ print(vif_results)
 ##################################################
 
 # Estimate a regression model.
-lm_model_1 <- lm(data = life_exp_data, 
-                 formula = lifeexpect ~ medinc + uninsured + 
+lm_model_1 <- lm(data = life_exp_data,
+                 formula = lifeexpect ~ medinc + uninsured +
                    smoke + obesity + teenbirth + gunlaw + metro)
 
 # Output the results to screen.
@@ -146,38 +146,38 @@ summary(lm_model_1)
 ##################################################
 # Estimating a Regression Model
 # Model 2: Linear model for life expectancy
-# Trimming down the model by omitting variables. 
+# Trimming down the model by omitting variables.
 ##################################################
 
 # Estimate a regression model.
-lm_model_2 <- lm(data = life_exp_data, 
-                   # Remove some variables from here: 
-                   formula = lifeexpect ~ medinc +  
+lm_model_2 <- lm(data = life_exp_data,
+                   # Remove some variables from here:
+                   formula = lifeexpect ~ medinc +
                    smoke + obesity + teenbirth + gunlaw + metro)
 # Note that the '+' signs allow for the formula to continue
-# to the next line. 
+# to the next line.
 
 # Output the results to screen.
 summary(lm_model_2)
 
 # Be sure to consider the 4 important specification criteria (p. 166)
-# for each variable under consideration. 
+# for each variable under consideration.
 
 
 ##################################################
 # Estimating a Regression Model
 # Model 3: Linear model for life expectancy
-# 
+#
 ##################################################
 
 # Consider further exclusions before arriving at
-# the simplest model. 
+# the simplest model.
 
 
 # Estimate a regression model.
-lm_model_3 <- lm(data = life_exp_data, 
-                 # Remove some variables from here: 
-                 formula = lifeexpect ~ # medinc +  
+lm_model_3 <- lm(data = life_exp_data,
+                 # Remove some variables from here:
+                 formula = lifeexpect ~ # medinc +
                    smoke + obesity + teenbirth + gunlaw + metro)
 
 

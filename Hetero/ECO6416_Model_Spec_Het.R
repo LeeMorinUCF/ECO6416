@@ -1,23 +1,24 @@
 ##################################################
-# 
+#
 # ECO 6416: Applied Business Research Tools
-# 
+#
 # OLS Regression Demo
-# Examples of Model Specfication
-# 
+# Examples of Model Specification
+#
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
 # College of Business Administration
 # University of Central Florida
-# 
-# October 30, 2018
-# 
+#
+# September 10, 2020
+#
 ##################################################
-# 
+#
 # ECO6416_Model_Spec_Het gives examples of OLS regression models
-#   by considering a number of different model specifications.
-# 
+#   by considering a number of different model specifications
+#   to correct for heteroskedasticity.
+#
 ##################################################
 
 
@@ -45,10 +46,10 @@ wd_path <- 'C:/Users/le279259/Desktop/ECO6416'
 # as in:
 # wd_path <- 'C:/Users/name/of/your/path'
 
-# Set the working directory to this path. 
+# Set the working directory to this path.
 setwd(wd_path)
 
-# Verify that the path was assigned correctly. 
+# Verify that the path was assigned correctly.
 getwd()
 
 
@@ -60,7 +61,7 @@ tractor_sales <- read.csv('TRACTOR7.csv')
 
 # Inspect the contents.
 summary(tractor_sales)
-# Make sure there are no problems with the data. 
+# Make sure there are no problems with the data.
 
 
 ##################################################
@@ -68,24 +69,24 @@ summary(tractor_sales)
 ##################################################
 
 # You can create new variables in two ways:
-# 1. Add commands within this program 
+# 1. Add commands within this program
 #     (as for log_saleprice and squared_horsepower below).
-# 2. Create new columns in a spreadsheet.  
+# 2. Create new columns in a spreadsheet.
 #   (but you would need to re-load the dataset
 #   after adding variables this way)
 
 hist(tractor_sales[, 'saleprice'])
 # Notice that there are some very large values.
-# Consider taking logs to bring outliers closer to the others. 
+# Consider taking logs to bring outliers closer to the others.
 
 tractor_sales[, 'log_saleprice'] <- log(tractor_sales[, 'saleprice'])
 
 # Now plot the histogram for log of saleprice:
 hist(tractor_sales[, 'log_saleprice'])
-# Much better behaved. Looks almost normal. 
+# Much better behaved. Looks almost normal.
 
 # Create a variable squared_horsepower
-# to investigate quadratic relationship of sale price to horsepower. 
+# to investigate quadratic relationship of sale price to horsepower.
 tractor_sales[, 'squared_horsepower'] <- tractor_sales[, 'horsepower']^2
 
 
@@ -95,9 +96,9 @@ tractor_sales[, 'squared_horsepower'] <- tractor_sales[, 'horsepower']^2
 ##################################################
 
 # Estimate a regression model.
-lm_model_1 <- lm(data = tractor_sales, 
+lm_model_1 <- lm(data = tractor_sales,
                  formula = saleprice ~ horsepower + age + enghours +
-                   diesel + fwd + manual + johndeere + 
+                   diesel + fwd + manual + johndeere +
                    spring + summer + winter)
 
 # Output the results to screen.
@@ -116,11 +117,11 @@ tractor_sales[, 'saleprice_hat'] <- predict(lm_model_1)
 # between the observed con and the predictions.
 tractor_sales[, 'saleprice_resid'] <- tractor_sales[, 'saleprice'] - tractor_sales[, 'saleprice_hat']
 
-# Plot the residuals over Predicted Price. 
-plot(tractor_sales[, 'saleprice_hat'], 
-     tractor_sales[, 'saleprice_resid'], 
-     main = 'OLS Residuals vs Predicted Price', 
-     xlab = 'Predicted Price', 
+# Plot the residuals over Predicted Price.
+plot(tractor_sales[, 'saleprice_hat'],
+     tractor_sales[, 'saleprice_resid'],
+     main = 'OLS Residuals vs Predicted Price',
+     xlab = 'Predicted Price',
      ylab = 'Residual')
 # Residuals have a strong pattern.
 
@@ -132,9 +133,9 @@ plot(tractor_sales[, 'saleprice_hat'],
 ##################################################
 
 # Estimate a regression model.
-lm_model_2 <- lm(data = tractor_sales, 
+lm_model_2 <- lm(data = tractor_sales,
                  formula = log_saleprice ~ horsepower + age + enghours +
-                   diesel + fwd + manual + johndeere + 
+                   diesel + fwd + manual + johndeere +
                    spring + summer + winter)
 
 # Output the results to screen.
@@ -153,49 +154,49 @@ tractor_sales[, 'log_saleprice_hat'] <- predict(lm_model_2)
 # between the observed con and the predictions.
 tractor_sales[, 'log_saleprice_resid'] <- tractor_sales[, 'log_saleprice'] - tractor_sales[, 'log_saleprice_hat']
 
-# Plot the residuals over Predicted Price. 
-plot(tractor_sales[, 'log_saleprice_hat'], 
-     tractor_sales[, 'log_saleprice_resid'], 
-     main = 'OLS Residuals vs Log of Predicted Price', 
-     xlab = 'Log of Predicted Price', 
+# Plot the residuals over Predicted Price.
+plot(tractor_sales[, 'log_saleprice_hat'],
+     tractor_sales[, 'log_saleprice_resid'],
+     main = 'OLS Residuals vs Log of Predicted Price',
+     xlab = 'Log of Predicted Price',
      ylab = 'Residual')
 # Residuals are negative for the highest predictions.
 
-# Plot the residuals over horsepower. 
-plot(tractor_sales[, 'horsepower'], 
-     tractor_sales[, 'log_saleprice_resid'], 
-     main = 'OLS Residuals vs Horsepower', 
-     xlab = 'Horsepower', 
+# Plot the residuals over horsepower.
+plot(tractor_sales[, 'horsepower'],
+     tractor_sales[, 'log_saleprice_resid'],
+     main = 'OLS Residuals vs Horsepower',
+     xlab = 'Horsepower',
      ylab = 'Residual')
 # Residuals are increasing for low values of horsepower
 # and negative with high horsepower.
 
 
 ##################################################
-# 
+#
 # Estimating a Regression Model
 # Model 3: Linear model for log of dollar sale price
 #     Polynomial Functional Form for Horsepower
-# 
+#
 # Consider a polynomial functional form for horsepower.
 # Idea: Horsepower improves performance up to a limit,
 # then extra power does not add value, only consumes more fuel.
-# 
-# 1. Generate the squared variable. 
+#
+# 1. Generate the squared variable.
 # 2. Hypothesize the signs.
 # 3. Add the squared horsepower term to the regression equation.
-# 4. Estimate the revised model. 
+# 4. Estimate the revised model.
 # 5. Analyze the resulting estimates.
-# 6. Make recommendation for the new model. 
-# 
+# 6. Make recommendation for the new model.
+#
 ##################################################
 
 
 # Estimate a regression model.
-lm_model_3 <- lm(data = tractor_sales, 
-                 formula = log_saleprice ~ horsepower + squared_horsepower + 
+lm_model_3 <- lm(data = tractor_sales,
+                 formula = log_saleprice ~ horsepower + squared_horsepower +
                    age + enghours +
-                   diesel + fwd + manual + johndeere + 
+                   diesel + fwd + manual + johndeere +
                    spring + summer + winter)
 
 # Output the results to screen.
@@ -214,23 +215,23 @@ tractor_sales[, 'log_saleprice_hat_2'] <- predict(lm_model_3)
 # between the observed con and the predictions.
 tractor_sales[, 'log_saleprice_resid_2'] <- tractor_sales[, 'log_saleprice'] - tractor_sales[, 'log_saleprice_hat_2']
 
-# Plot the residuals over Predicted Price. 
-plot(tractor_sales[, 'log_saleprice_hat_2'], 
-     tractor_sales[, 'log_saleprice_resid_2'], 
-     main = 'OLS Residuals vs Log of Predicted Price', 
-     xlab = 'Log of Predicted Price', 
+# Plot the residuals over Predicted Price.
+plot(tractor_sales[, 'log_saleprice_hat_2'],
+     tractor_sales[, 'log_saleprice_resid_2'],
+     main = 'OLS Residuals vs Log of Predicted Price',
+     xlab = 'Log of Predicted Price',
      ylab = 'Residual')
 # Residuals look homoskedastic.
 
 
-# Plot the residuals over horsepower. 
-plot(tractor_sales[, 'horsepower'], 
-     tractor_sales[, 'log_saleprice_resid_2'], 
-     main = 'OLS Residuals vs Horsepower', 
-     xlab = 'Horsepower', 
+# Plot the residuals over horsepower.
+plot(tractor_sales[, 'horsepower'],
+     tractor_sales[, 'log_saleprice_resid_2'],
+     main = 'OLS Residuals vs Horsepower',
+     xlab = 'Horsepower',
      ylab = 'Residual')
 
-# It ssems that the change in functional form also 
+# It ssems that the change in functional form also
 # improved the distribution of the error terms.
 
 

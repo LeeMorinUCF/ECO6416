@@ -1,23 +1,23 @@
 ##################################################
-# 
+#
 # ECO 6416: Applied Business Research Tools
-# 
+#
 # Logistic Regression Demo
-# Examples of Model Specfication
-# 
+# Examples of Model Specification
+#
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
 # College of Business Administration
 # University of Central Florida
-# 
-# October 30, 2018
-# 
+#
+# September 10, 2020
+#
 ##################################################
-# 
+#
 # ECO6416_Logistic gives an example of a logistic regression models
 #   and compares with linear model specifications.
-# 
+#
 ##################################################
 
 
@@ -40,13 +40,13 @@ library(pROC)
 
 # Set path for working directory.
 # One option: Put files on desktop in a folder called Data
-wd_path <- 'C:/Users/le279259/Desktop/ECO6416'
-# Other option: Put files in a path and set it as your working directory. 
+wd_path <- 'C:/Users/le279259/Desktop/ECO6416/Logit'
+# Other option: Put files in a path and set it as your working directory.
 # wd_path <- 'C:/Users/le279259/Documents/Teaching/ECO6416_Fall2018/Data'
-# Set the working directory to this path. 
+# Set the working directory to this path.
 setwd(wd_path)
 
-# Verify that the path was assigned correctly. 
+# Verify that the path was assigned correctly.
 getwd()
 
 
@@ -54,7 +54,7 @@ getwd()
 # Loading the Data
 ##################################################
 
-# A sample dataset to predict employment among women. 
+# A sample dataset to predict employment among women.
 female_employment <- read.csv('WOMEN13.csv')
 
 
@@ -68,8 +68,8 @@ summary(female_employment)
 # A is the woman's age
 
 
-# Compare the distributions of variables 
-# for classes of the dependent variable. 
+# Compare the distributions of variables
+# for classes of the dependent variable.
 summary(female_employment[female_employment[, 'D'] == 0, ])
 summary(female_employment[female_employment[, 'D'] == 1, ])
 
@@ -78,7 +78,7 @@ summary(female_employment[female_employment[, 'D'] == 1, ])
 # Generating New Variables
 ##################################################
 
-# Can do this in a spreadsheet or within this program. 
+# Can do this in a spreadsheet or within this program.
 
 
 ##################################################
@@ -87,7 +87,7 @@ summary(female_employment[female_employment[, 'D'] == 1, ])
 ##################################################
 
 # Estimate a regression model.
-lm_model_1 <- lm(data = female_employment, 
+lm_model_1 <- lm(data = female_employment,
                  formula = D ~ M + S)
 
 # Output the results to screen.
@@ -97,7 +97,7 @@ summary(lm_model_1)
 female_employment[, 'D_hat_lm'] <- predict(lm_model_1)
 
 summary(female_employment[, 'D_hat_lm'])
-# Anything look unusual?
+# Does anything look unusual?
 
 
 ##################################################
@@ -106,8 +106,8 @@ summary(female_employment[, 'D_hat_lm'])
 ##################################################
 
 # Estimate a logistic regression model.
-logit_model_1 <- glm(data = female_employment, 
-                  formula = D ~ M + S, 
+logit_model_1 <- glm(data = female_employment,
+                  formula = D ~ M + S,
                   family = 'binomial')
 
 # Output the results to screen.
@@ -127,28 +127,28 @@ summary(female_employment[, 'D_hat_logit'])
 ##################################################
 
 # Calculate the AUROC for the logistic model.
-roc(response = female_employment[, 'D'], 
+roc(response = female_employment[, 'D'],
     predictor = female_employment[, 'D_hat_logit'])
 
 
 # Compare this to the estimate for the linear model.
-roc(response = female_employment[, 'D'], 
+roc(response = female_employment[, 'D'],
     predictor = female_employment[, 'D_hat_lm'])
 # Ironic, since it actually provides better ordering in this case.
-# However, it provides negative predictions of the probabilities. 
+# However, it provides negative predictions of the probabilities.
 
 
 # This statistic is best used to compare different models
 # with different predictor variables,
-# as in the following exercise. 
+# as in the following exercise.
 
 
 ##################################################
-# 
+#
 # Exercise:
-# See if you can improve upon this model. 
-# 
-# 
+# See if you can improve upon this model.
+#
+#
 ##################################################
 
 

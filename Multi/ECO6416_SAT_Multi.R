@@ -1,23 +1,23 @@
 ##################################################
-# 
+#
 # ECO 6416: Applied Business Research Tools
-# 
+#
 # Regression Demo
 # Examples of Multicollinearity
-# 
+#
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
 # College of Business Administration
 # University of Central Florida
-# 
-# November 17, 2019
-# 
+#
+# September 10, 2020
+#
 ##################################################
-# 
-# ECO6416_Logistic gives an example of a logistic regression models
+#
+# ECO6416_SAT_Multi gives an example of a logistic regression models
 #   and compares with linear model specifications.
-# 
+#
 ##################################################
 
 
@@ -36,13 +36,13 @@ rm(list=ls(all=TRUE))
 
 # Set path for working directory.
 # One option: Put files on desktop in a folder called Data
-wd_path <- 'C:/Users/le279259/Desktop/ECO6416'
-# Other option: Put files in a path and set it as your working directory. 
+wd_path <- 'C:/Users/le279259/Desktop/ECO6416/Multi'
+# Other option: Put files in a path and set it as your working directory.
 # wd_path <- 'C:/Users/le279259/Documents/Teaching/ECO6416_Fall2018/Data'
-# Set the working directory to this path. 
+# Set the working directory to this path.
 setwd(wd_path)
 
-# Verify that the path was assigned correctly. 
+# Verify that the path was assigned correctly.
 getwd()
 
 
@@ -50,7 +50,7 @@ getwd()
 # Loading the Data
 ##################################################
 
-# A sample dataset to predict employment among women. 
+# A sample dataset to predict employment among women.
 sat <- read.csv('SAT8.csv')
 
 
@@ -69,8 +69,8 @@ summary(sat)
 # SAT is the student's SAT score
 
 
-# Compare the distributions of variables 
-# for classes of the GEND indicator. 
+# Compare the distributions of variables
+# for classes of the GEND indicator.
 summary(sat[sat[, 'GEND'] == 0, ])
 summary(sat[sat[, 'GEND'] == 1, ])
 
@@ -83,7 +83,7 @@ table(sat[, 'RACE'], sat[, 'ESL'])
 # Generating New Variables
 ##################################################
 
-# Can do this in a spreadsheet or within this program. 
+# Can do this in a spreadsheet or within this program.
 
 
 ##################################################
@@ -92,7 +92,7 @@ table(sat[, 'RACE'], sat[, 'ESL'])
 ##################################################
 
 # Estimate a regression model.
-lm_model_1 <- lm(data = sat, 
+lm_model_1 <- lm(data = sat,
                  formula = SAT ~ GPA + AP + GEND + ESL + RACE
                  # formula = SAT ~ GPA + AP + GEND + ESL
                  # formula = SAT ~ GPA + AP + GEND + RACE
