@@ -8,10 +8,10 @@
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
-# College of Business Administration
+# College of Business
 # University of Central Florida
 #
-# September 9, 2020
+# August 21, 2023
 #
 ##################################################
 #
@@ -40,7 +40,7 @@ rm(list=ls(all=TRUE))
 
 # Set path for working directory.
 # Put files on desktop in a folder called ECO6416
-# wd_path <- 'C:/Users/le279259/Desktop/ECO6416/Model_Spec'
+# wd_path <- 'C:/Users/le279259/Desktop/ECO6416'
 # Modify the above line according to the specific path on your computer,
 # as in:
 # wd_path <- 'C:/Users/name/of/your/path'
@@ -49,7 +49,7 @@ rm(list=ls(all=TRUE))
 # setwd(wd_path)
 
 # Or set the working directory in one command:
-setwd("C:/Users/le279259/Desktop/ECO6416/Model_Spec")
+setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO6416_Demos")
 
 # Verify that the path was assigned correctly.
 getwd()
@@ -59,7 +59,7 @@ getwd()
 # Loading the Data
 ##################################################
 
-tractor_sales <- read.csv('TRACTOR7.csv')
+tractor_sales <- read.csv('TRACTOR_A6.csv')
 
 # Inspect the contents.
 summary(tractor_sales)
@@ -100,7 +100,7 @@ tractor_sales[, 'squared_horsepower'] <- tractor_sales[, 'horsepower']^2
 # Estimate a regression model.
 lm_model_1 <- lm(data = tractor_sales,
                  formula = saleprice ~ horsepower + age + enghours +
-                   diesel + fwd + manual + johndeere +
+                   diesel + fwd + manual + cab + johndeere +
                    spring + summer + winter)
 
 # Output the results to screen.
@@ -114,8 +114,9 @@ summary(lm_model_1)
 
 # Estimate a regression model.
 lm_model_2 <- lm(data = tractor_sales,
-                 formula = log_saleprice ~ horsepower + age + enghours +
-                   diesel + fwd + manual + johndeere +
+                 formula = log_saleprice ~ horsepower + 
+                   age + enghours +
+                   diesel + fwd + manual + cab + johndeere +
                    spring + summer + winter)
 
 # Output the results to screen.
@@ -146,7 +147,7 @@ summary(lm_model_2)
 lm_model_3 <- lm(data = tractor_sales,
                  formula = log_saleprice ~ horsepower + squared_horsepower +
                    age + enghours +
-                   diesel + fwd + manual + johndeere +
+                   diesel + fwd + manual + cab + johndeere +
                    spring + summer + winter)
 
 # Output the results to screen.
@@ -154,38 +155,22 @@ summary(lm_model_3)
 
 
 
+
+
 ##################################################
 # Estimating a Regression Model
 # Model 4: Linear model for log of dollar sale price
-# Add omitted variable: enclosed cab indicator
-##################################################
-
-
-# Estimate the regression model.
-lm_model_4 <- lm(data = tractor_sales,
-                 formula = log_saleprice ~ horsepower + squared_horsepower +
-                   age + enghours +
-                   diesel + fwd + manual + johndeere + cab +
-                   spring + summer + winter)
-
-# Output the results to screen.
-summary(lm_model_4)
-
-
-##################################################
-# Estimating a Regression Model
-# Model 5: Linear model for log of dollar sale price
 # Omit seasonal indicators
 ##################################################
 
 # Estimate a regression model.
-lm_model_5 <- lm(data = tractor_sales,
+lm_model_4 <- lm(data = tractor_sales,
                  formula = log_saleprice ~ horsepower + squared_horsepower +
                    age + enghours +
-                   diesel + fwd + manual + johndeere + cab)
+                   diesel + fwd + manual + cab + johndeere)
 
 # Output the results to screen.
-summary(lm_model_5)
+summary(lm_model_4)
 
 ##################################################
 #
@@ -194,12 +179,12 @@ summary(lm_model_5)
 #
 # The unconstrained RSS is calculated from the model
 # that includes seasonal indicators:
-RSS_unconstrained <- sum(lm_model_4$residuals^2)
+RSS_unconstrained <- sum(lm_model_3$residuals^2)
 print(RSS_unconstrained)
 #
 # The constrained RSS is calculated from the model
 # that excludes seasonal indicators:
-RSS_constrained <- sum(lm_model_5$residuals^2)
+RSS_constrained <- sum(lm_model_4$residuals^2)
 print(RSS_constrained)
 #
 # Follow the approach for conducting the F-test on p. 143.
@@ -210,29 +195,60 @@ print(RSS_constrained)
 # Need sample size and number of variables.
 
 num_obs <- nrow(tractor_sales)
-num_vars <- 12
+num_vars <- 13 # All parameters, including the constant and seasonal indicators.
+num_restr <- 3 # Three restrictions for seasonal indicators.
 
-F_stat <- (RSS_constrained - RSS_unconstrained)/3 /
+
+F_stat <- (RSS_constrained - RSS_unconstrained)/num_restr /
   RSS_unconstrained*(num_obs - num_vars - 1)
 print(F_stat)
 
+
+# You can look in the tables in the textbook
+# but R can calculate critical values.
+F_critical_1 <- qf(p = 0.01,
+                   df1 = num_restr, df2 = (num_obs - num_vars - 1),
+                   lower.tail = FALSE)
+F_critical_5 <- qf(p = 0.05,
+                   df1 = num_restr, df2 = (num_obs - num_vars - 1),
+                   lower.tail = FALSE)
+F_critical_10 <- qf(p = 0.10,
+                    df1 = num_restr, df2 = (num_obs - num_vars - 1),
+                    lower.tail = FALSE)
+
+print("Critical value of F-statistic:")
+print("at the 1% level")
+print(F_critical_1)
+print("at the 5% level")
+print(F_critical_5)
+print("at the 10% level")
+print(F_critical_10)
+
+
+# This places the F-statistic above the critical values for the
+# 1 percent level of significance.
+# Conclude that the seasonal indicators should be included in the model.
+
+
+
 ##################################################
 # Estimating a Regression Model
-# Model 6: Linear model for log of dollar sale price
-# Interact Slope Indicator for Diesel with Engine Hours
+# Model 5: Linear model for log of dollar sale price
+# Interact Slope Indicator for johndeere with Engine Hours
 ##################################################
 
 # Estimate a regression model.
-lm_model_6 <- lm(data = tractor_sales,
+lm_model_5 <- lm(data = tractor_sales,
                  formula = log_saleprice ~ horsepower + squared_horsepower +
-                   age + enghours + diesel*enghours + # Note the added term.
-                   diesel + fwd + manual + johndeere + cab)
+                   age + enghours + johndeere*enghours + # Note the added term.
+                   diesel + fwd + manual + cab + johndeere +
+                   spring + summer + winter)
 
 # Output the results to screen.
-summary(lm_model_6)
+summary(lm_model_5)
 
-# Does an additional hour of use affect a diesel-powered tractor
-# differently than a gasoline-powered tractor?
+# Does an additional hour of use affect the price of a John Deere tractor
+# differently than tractors of other brands?
 
 
 ##################################################
