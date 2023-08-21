@@ -15,7 +15,7 @@
 #
 ##################################################
 #
-# ECO5445_Logistic gives an example of a logistic regression model
+# ECO6416_Logistic gives an example of a logistic regression model
 #   and compares with linear model specifications.
 #
 ##################################################
