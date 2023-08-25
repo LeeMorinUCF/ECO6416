@@ -11,11 +11,11 @@
 # College of Business
 # University of Central Florida
 #
-# August 25, 2023
+# September 7, 2021
 #
 ##################################################
 #
-# ECO6416_tools is a library of functions for
+# ECO6416_tools_2 is a library of functions for
 #     in-class demonstrations of linear regression.
 #
 # This version has new tools for generating
@@ -100,7 +100,7 @@ housing_sample <- function(beta_0, beta_income, beta_cali, beta_earthquake,
 
   ##################################################
   # Generating Additional Data
-  # The extra data that are not in the model
+  # The extra data that is not in the model
   ##################################################
 
   #--------------------------------------------------

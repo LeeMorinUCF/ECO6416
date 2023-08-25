@@ -11,7 +11,7 @@
 # College of Business
 # University of Central Florida
 #
-# August 25, 2023
+# September 7, 2021
 #
 ##################################################
 #
@@ -19,7 +19,9 @@
 #   using simulated data.
 #
 # Dependencies:
-#   ECO6416_tools.R
+#   ECO6416_tools_2.R
+# Note that this is version 2, which is modified
+# from the last version.
 #
 ##################################################
 
@@ -37,20 +39,18 @@ rm(list=ls(all=TRUE))
 getwd()
 
 
-# Set working directory.
-# setwd("/path/to/your/folder")
-# Find this path as follows:
-# 1. Click on the "File" tab in the bottom right pane.
-# 2. Browse to the folder on your computer that contains your R files.
-# 3. Click the gear icon and choose the option "Set as Working Directory."
-# 4. Copy the command from the Console in the bottom left pane.
-# 5. Paste the command below:
-
+# You need to set the working directory to the location
+# of your files.
+# setwd('~/path/to/your/folder')
+# Make sure to spell it correctly and use forward slashes.
+# Make sure to have both open and closed quotes.
+# Both single and double quotes are appropriate,
+# as long as they are the same on both sides.
+# For example:
 setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO6416_Demos")
+# Note that my folder is different because it depends on where I store my files.
 
-
-# Now, RStudio should know where your files are.
-
+# If an error message is displayed, verify the path and run setwd() again.
 
 # Verify that it changed the path correctly.
 getwd()
@@ -65,11 +65,11 @@ getwd()
 
 
 # Read function for sampling data.
-source('ECO6416_tools.R')
-# This is the same as running the ECO6416_tools.R script first.
+source('ECO6416_tools_2.R')
+# This is the same as running the ECO6416_tools_2.R script first.
 # It assumes that the script is saved in the same working folder.
 
-# The file ECO6416_tools.R must be in the working directory.
+# The file ECO6416_tools_2.R must be in the working directory.
 # If you an error message, make sure that the file is
 # located in your working directory.
 # Also make sure that the name has not changed.

@@ -8,10 +8,10 @@
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
-# College of Business
+# College of Business Administration
 # University of Central Florida
 #
-# August 25, 2023
+# August 31, 2020
 #
 ##################################################
 #
@@ -31,48 +31,28 @@
 # Clear workspace.
 rm(list=ls(all=TRUE))
 
-# RStudio does its work in a working directory,
-# which is a folder on your computer.
-# Display the current path to working directory, with getwd():
-getwd()
-
-
 # Set working directory.
-# setwd("/path/to/your/folder")
-# Find this path as follows:
-# 1. Click on the "File" tab in the bottom right pane.
-# 2. Browse to the folder on your computer that contains your R files.
-# 3. Click the gear icon and choose the option "Set as Working Directory."
-# 4. Copy the command from the Console in the bottom left pane.
-# 5. Paste the command below:
+# wd_path <- '/path/to/your/folder'
+# Make sure to spell it correctly and use forward slashes.
+# For example:
+wd_path <- 'C:/Users/le279259/Desktop/ECO6416_Demos/Module02'
+# Note that my folder is different because it depends on where I store my files.
+setwd(wd_path)
 
-setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO6416_Demos")
-
-
-# Now, RStudio should know where your files are.
+# Or do this in one step (using buttons in  File panel).
+# The copy the command that appears in the console and paste it here.
+# setwd("C:/Users/le279259/Desktop/ECO6416_Demos/Module02")
 
 
-# Verify that it changed the path correctly.
-getwd()
-
-
-
-# R uses libraries, which we will use in future sessions.
 # No libraries required.
 # Otherwise would have a command like the following.
 # library(name_of_R_package)
 # We will use this later in the course.
 
-
 # Read function for sampling data.
 source('ECO6416_tools.R')
 # This is the same as running the ECO6416_tools.R script first.
 # It assumes that the script is saved in the same working folder.
-
-# The file ECO6416_tools.R must be in the working directory.
-# If you an error message, make sure that the file is
-# located in your working directory.
-# Also make sure that the name has not changed.
 
 
 ##################################################
@@ -82,7 +62,7 @@ source('ECO6416_tools.R')
 # Dependent Variable: Property values (in Millions)
 
 beta_0          <-   0.10    # Intercept
-beta_income     <-   5.00    # Slope coefficient for income
+beta_income     <-   5.00    # Slope ceofficient for income
 beta_cali       <-   0.25    # Slope coefficient for California
 beta_earthquake <- - 0.50    # Slope coefficient for earthquake
 # beta_earthquake <- - 0.00    # Slope coefficient for earthquake

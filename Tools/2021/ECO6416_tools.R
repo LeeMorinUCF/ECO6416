@@ -8,18 +8,15 @@
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
-# College of Business
+# College of Business Administration
 # University of Central Florida
 #
-# August 25, 2023
+# August 31, 2020
 #
 ##################################################
 #
 # ECO6416_tools is a library of functions for
 #     in-class demonstrations of linear regression.
-#
-# This version has new tools for generating
-# artificial datasets to practice statistical analysis.
 #
 ##################################################
 
@@ -41,7 +38,7 @@
 #
 # Inputs:
 #    beta_0 # Intercept
-#    beta_income # Slope coefficient for income
+#    beta_income # Slope ceofficient for income
 #    beta_cali # Slope coefficient for California
 #    beta_earthquake # Slope coefficient for earthquake
 #    avg_income # Mean income (in millions).
@@ -61,7 +58,6 @@
 #     epsilon (the error term for the model).
 #
 ##################################################
-
 
 housing_sample <- function(beta_0, beta_income, beta_cali, beta_earthquake,
                            avg_income, sd_income, pct_in_cali, prob_earthquake,
@@ -100,7 +96,7 @@ housing_sample <- function(beta_0, beta_income, beta_cali, beta_earthquake,
 
   ##################################################
   # Generating Additional Data
-  # The extra data that are not in the model
+  # The extra data that is not in the model
   ##################################################
 
   #--------------------------------------------------
@@ -148,68 +144,6 @@ housing_sample <- function(beta_0, beta_income, beta_cali, beta_earthquake,
   }
 
   return(housing_data)
-
-}
-
-##################################################
-#
-# new_sample generates simulated data to use in
-#     demonstrations of regression analysis.
-#
-##################################################
-#
-# Inputs:
-#    beta_0 # Intercept
-#    beta_income # Slope coefficient for a continuous variable
-#    beta_cali # Slope coefficient for an indicator variable
-#    beta_earthquake # Slope coefficient for another indicator variable
-#    avg_income # Average of the continuous variable.
-#    sd_income # Standard deviation of the continuous variable.
-#    pct_in_cali # Fraction of dataset with indicator.
-#    prob_earthquake # Frequency of other indicator.
-#    sigma_2 # Variance of error term
-#    num_obs # Number of observations in dataset
-#
-# Ouput:
-#   car_data, a num_obs x 6 data frame with variables:
-#     obsn_num an integer label for each observation,
-#     car_price,
-#     mileage,
-#     accident (whether the car has been in an accident),
-#     damage (whether structural damage had occurred),
-#     epsilon (the error term for the model).
-#
-##################################################
-
-other_sample <- function(beta_0, beta_income, beta_cali, beta_earthquake,
-                           avg_income, sd_income, pct_in_cali, prob_earthquake,
-                           sigma_2, num_obs,
-                           number_of_income_variables = 0, measurement_error_income = 0,
-                           number_of_rainfall_variables = 0, prob_rainfall = 0) {
-
-  # Draw a realization from housing sample and change the names of variables.
-  # it's still a linear model with the same structure,
-  # only different parameters and names of variables.
-  new_data <- housing_sample(beta_0, beta_income, beta_cali, beta_earthquake,
-                           avg_income, sd_income, pct_in_cali, prob_earthquake,
-                           sigma_2, num_obs,
-                           number_of_income_variables, measurement_error_income,
-                           number_of_rainfall_variables, prob_rainfall)
-
-
-
-  # Update variables.
-  colnames(new_data)[seq(6)] <- c("obsn_num",
-                          "car_price", "mileage",
-                          "accident", "damage",
-                          "epsilon")
-  if (number_of_income_variables > 0) {
-    colnames(new_data)[seq(7, 6 + number_of_income_variables)] <-
-      sprintf('mileage_%d', seq(number_of_income_variables))
-  }
-
-
-  return(new_data)
 
 }
 
