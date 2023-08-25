@@ -8,7 +8,7 @@
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
-# College of Business Administration
+# College of Business
 # University of Central Florida
 #
 # September 8, 2020
@@ -32,10 +32,17 @@
 rm(list=ls(all=TRUE))
 
 # Set working directory.
-# wd_path <- '/path/to/your/folder'
-wd_path <- 'C:/Users/le279259/Documents/Teaching/ECO6416_Fall2019/Module02' # On Windows
+# setwd("/path/to/your/folder")
+# Find this path as follows:
+# 1. Click on the "File" tab in the bottom right pane.
+# 2. Browse to the folder on your computer that contains your R files.
+# 3. Click the gear icon and choose the option "Set as Working Directory."
+# 4. Copy the command from the Console in the bottom left pane.
+# 5. Paste the command below:
 
-setwd(wd_path)
+setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO6416_Demos")
+# Now, RStudio should know where your files are.
+
 
 # No libraries required.
 # Otherwise would have a command like the following.
