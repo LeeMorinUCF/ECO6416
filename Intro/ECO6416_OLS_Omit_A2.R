@@ -3,7 +3,7 @@
 # ECO 6416.0028 Applied Business Research Tools
 #
 # OLS Regression Demo
-# Regression with Simulated Data
+# Regression with Simulated Data: Omitted Variables
 #
 # Lealand Morin, Ph.D.
 # Assistant Professor
@@ -15,14 +15,14 @@
 #
 ##################################################
 #
-# ECO6416_OLS_Sim gives an example of OLS regression
-#   using simulated data.
+# ECO6416_OLS_Omit uses simulated data to create an example
+#   that illustrates the change in estimates resulting from
+#   omitted variables.
 #
 # Dependencies:
 #   ECO6416_tools.R
 #
 ##################################################
-
 
 ##################################################
 # Preparing the Workspace
@@ -53,16 +53,10 @@ setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO641
 # Now, RStudio should know where your files are.
 
 
-# Verify that it changed the path correctly.
-getwd()
 
-
-
-# R uses libraries, which we will use in future sessions.
 # No libraries required.
 # Otherwise would have a command like the following.
 # library(name_of_R_package)
-# We will use this later in the course.
 
 
 # Read function for sampling data.
@@ -80,26 +74,26 @@ source('ECO6416_tools.R')
 # Setting the Parameters
 ##################################################
 
-# Dependent Variable: Property values (in Millions)
+# Dependent Variable: Automobile values
 
-beta_0          <-   0.10    # Intercept
-beta_income     <-   5.00    # Slope coefficient for income
-beta_cali       <-   0.25    # Slope coefficient for California
-beta_earthquake <- - 0.50    # Slope coefficient for earthquake
-# beta_earthquake <- - 0.00    # Slope coefficient for earthquake
+beta_0          <-   50000     # Intercept
+beta_mileage    <- -  0.20     # Slope coefficient for mileage
+beta_accident   <- -  5000     # Slope coefficient for accident
+beta_damage     <- - 20000     # Slope coefficient for damage
+# beta_damage     <-       0   # Alternate Slope coefficient for damage
 
-# Distribution of incomes (also in millions).
-avg_income <- 0.1
-sd_income <- 0.01
+# Distribution of mileage.
+avg_mileage <- 50000
+sd_mileage  <- 10000
 
-# Fraction of dataset in California.
-pct_in_cali <- 0.5
+# Fraction of dataset in an accident.
+pct_accident <- 0.4
 
-# Frequency of earthquakes (only in California).
-prob_earthquake <- 0.05
+# Frequency of damages (only after an accident).
+prob_damage <- 0.15
 
 # Additional terms:
-sigma_2 <- 0.1      # Variance of error term
+sigma_2 <- 4000    # Variance of error term
 num_obs <- 100      # Number of observations in dataset
 
 
@@ -107,67 +101,64 @@ num_obs <- 100      # Number of observations in dataset
 # Generating the Data
 ##################################################
 
-# Call the housing_sample function from ECO6416_Sim_Data.R.
-housing_data <- housing_sample(beta_0, beta_income, beta_cali, beta_earthquake,
-                               avg_income, sd_income, pct_in_cali, prob_earthquake,
-                               sigma_2, num_obs)
+# Call the new_sample function from ECO6416_tools_2.R.
+car_data <- other_sample(beta_0, beta_mileage, beta_accident, beta_damage,
+                         avg_mileage, sd_mileage, pct_accident, prob_damage,
+                         sigma_2, num_obs)
 
 
 # Summarize the data to inspect for data quality.
-summary(housing_data)
+summary(car_data)
 
-# Check that earthquakes occurred only in California:
-table(housing_data[, 'in_cali'], housing_data[, 'earthquake'])
+# Check that damages occurred only in accident:
+table(car_data[, 'accident'], car_data[, 'damage'])
 # Data errors are the most frequent cause of problems in model-building.
 
+# Run it again if no damages occurred.
 
 
 ##################################################
 # Estimating the Regression Model
+# Model 1: All Variables Included
 ##################################################
 
 # Estimate a regression model.
-lm_model <- lm(data = housing_data,
-               formula = house_price ~ income + in_cali + earthquake)
+lm_full_model <- lm(data = car_data,
+                    formula = car_price ~ mileage + accident + damage)
 
 # Output the results to screen.
-summary(lm_model)
-
-
-
-
-##################################################
-# Generate another dataset and save it
-##################################################
-
-# Call the housing_sample function from ECO6416_Sim_Data.R.
-housing_data_2 <- housing_sample(beta_0, beta_income, beta_cali, beta_earthquake,
-                               avg_income, sd_income, pct_in_cali, prob_earthquake,
-                               sigma_2, num_obs)
-
-# Save this to disk.
-write.csv(housing_data_2, file = 'housing_data.csv')
-
+summary(lm_full_model)
 
 
 ##################################################
-# Read the dataset and run another regression
-# This is the same process you will follow when
-# reading in a dataset obtained from any other source.
+# Estimating the Regression Model
+# Model 2: Omitting One Variable
 ##################################################
-
-# Read the newly saved dataset.
-housing_data_3 <- read.csv(file = 'housing_data.csv')
 
 # Estimate a regression model.
-lm_model_3 <- lm(data = housing_data_3,
-               formula = house_price ~ income + in_cali + earthquake)
+lm_no_damages <- lm(data = car_data,
+                        formula = car_price ~ mileage + accident) # damage removed.
 
 # Output the results to screen.
-summary(lm_model_3)
+summary(lm_no_damages)
+
+
+##################################################
+#
+# Exercise:
+#
+# Observe the values of the coefficient for damage.
+# Then compare the change in coefficient on accidents
+# with and without the damage variable.
+#
+# Then set the damage coefficient to zero and repeat the exercise.
+# Compare the change in coefficient on accidents
+# with and without the damage variable.
+#
+##################################################
+
 
 
 ##################################################
 # End
 ##################################################
-

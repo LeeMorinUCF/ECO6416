@@ -3,23 +3,24 @@
 # ECO 6416.0028 Applied Business Research Tools
 #
 # OLS Regression Demo
-# Regression with Simulated Data
+# Regression with Simulated Data: Omitted Variables
 #
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
-# College of Business
+# College of Business Administration
 # University of Central Florida
 #
-# August 25, 2023
+# September 8, 2020
 #
 ##################################################
 #
-# ECO6416_OLS_Sim gives an example of OLS regression
-#   using simulated data.
+# ECO6416_OLS_Omit uses simulated data to create an example
+#   that illustrates the change in estimates resulting from
+#   omitted variables.
 #
 # Dependencies:
-#   ECO6416_tools.R
+#   ECO6416_Sim_Data.R
 #
 ##################################################
 
@@ -31,49 +32,24 @@
 # Clear workspace.
 rm(list=ls(all=TRUE))
 
-# RStudio does its work in a working directory,
-# which is a folder on your computer.
-# Display the current path to working directory, with getwd():
-getwd()
+# Set working directory.
+# wd_path <- '/path/to/your/folder'
+wd_path <- 'C:/Users/le279259/Documents/Teaching/ECO6416_Fall2019/Module02' # On Windows
 
+setwd(wd_path)
 
-# You need to set the working directory to the location
-# of your files.
-# setwd("/path/to/your/folder")
-# Find this path as follows:
-# 1. Click on the "File" tab in the bottom right pane.
-# 2. Browse to the folder on your computer that contains your R files.
-# 3. Click the gear icon and choose the option "Set as Working Directory."
-# 4. Copy the command from the Console in the bottom left pane.
-# 5. Paste the command below:
+# Or do this in one step (using buttons in  File panel).
+setwd("~/Teaching/ECO6416_Fall2019/Module02")
 
-setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO6416_Demos")
-
-
-# Now, RStudio should know where your files are.
-
-
-# Verify that it changed the path correctly.
-getwd()
-
-
-
-# R uses libraries, which we will use in future sessions.
 # No libraries required.
 # Otherwise would have a command like the following.
 # library(name_of_R_package)
-# We will use this later in the course.
 
 
 # Read function for sampling data.
 source('ECO6416_tools.R')
 # This is the same as running the ECO6416_tools.R script first.
 # It assumes that the script is saved in the same working folder.
-
-# The file ECO6416_tools.R must be in the working directory.
-# If you an error message, make sure that the file is
-# located in your working directory.
-# Also make sure that the name has not changed.
 
 
 ##################################################
@@ -83,7 +59,7 @@ source('ECO6416_tools.R')
 # Dependent Variable: Property values (in Millions)
 
 beta_0          <-   0.10    # Intercept
-beta_income     <-   5.00    # Slope coefficient for income
+beta_income     <-   5.00    # Slope ceofficient for income
 beta_cali       <-   0.25    # Slope coefficient for California
 beta_earthquake <- - 0.50    # Slope coefficient for earthquake
 # beta_earthquake <- - 0.00    # Slope coefficient for earthquake
@@ -99,7 +75,7 @@ pct_in_cali <- 0.5
 prob_earthquake <- 0.05
 
 # Additional terms:
-sigma_2 <- 0.1      # Variance of error term
+sigma_2 <- 0.1        # Variance of error term
 num_obs <- 100      # Number of observations in dataset
 
 
@@ -120,54 +96,47 @@ summary(housing_data)
 table(housing_data[, 'in_cali'], housing_data[, 'earthquake'])
 # Data errors are the most frequent cause of problems in model-building.
 
+# Run it again if no earthquakes ocurred.
 
 
 ##################################################
 # Estimating the Regression Model
+# Model 1: All Variables Included
 ##################################################
 
 # Estimate a regression model.
-lm_model <- lm(data = housing_data,
-               formula = house_price ~ income + in_cali + earthquake)
+lm_full_model <- lm(data = housing_data,
+                    formula = house_price ~ income + in_cali + earthquake)
 
 # Output the results to screen.
-summary(lm_model)
-
-
-
-
-##################################################
-# Generate another dataset and save it
-##################################################
-
-# Call the housing_sample function from ECO6416_Sim_Data.R.
-housing_data_2 <- housing_sample(beta_0, beta_income, beta_cali, beta_earthquake,
-                               avg_income, sd_income, pct_in_cali, prob_earthquake,
-                               sigma_2, num_obs)
-
-# Save this to disk.
-write.csv(housing_data_2, file = 'housing_data.csv')
-
+summary(lm_full_model)
 
 
 ##################################################
-# Read the dataset and run another regression
-# This is the same process you will follow when
-# reading in a dataset obtained from any other source.
+# Estimating the Regression Model
+# Model 2: Omitting One Variable
 ##################################################
-
-# Read the newly saved dataset.
-housing_data_3 <- read.csv(file = 'housing_data.csv')
 
 # Estimate a regression model.
-lm_model_3 <- lm(data = housing_data_3,
-               formula = house_price ~ income + in_cali + earthquake)
+lm_no_earthquakes <- lm(data = housing_data,
+                        formula = house_price ~ income + in_cali) # earthquake removed.
 
 # Output the results to screen.
-summary(lm_model_3)
+summary(lm_no_earthquakes)
+
+
+##################################################
+#
+# Exercise:
+#
+# Observe the values of the coefficient for earthquakes.
+# Then compare the change in coefficient on California
+# with and without the earthquake variable.
+#
+##################################################
+
 
 
 ##################################################
 # End
 ##################################################
-

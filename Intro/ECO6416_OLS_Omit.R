@@ -8,10 +8,10 @@
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
-# College of Business Administration
+# College of Business
 # University of Central Florida
 #
-# September 8, 2020
+# August 25, 2023
 #
 ##################################################
 #
@@ -20,7 +20,7 @@
 #   omitted variables.
 #
 # Dependencies:
-#   ECO6416_Sim_Data.R
+#   ECO6416_tools.R
 #
 ##################################################
 
@@ -32,14 +32,22 @@
 # Clear workspace.
 rm(list=ls(all=TRUE))
 
-# Set working directory.
-# wd_path <- '/path/to/your/folder'
-wd_path <- 'C:/Users/le279259/Documents/Teaching/ECO6416_Fall2019/Module02' # On Windows
+# You need to set the working directory to the location
+# of your files.
+# setwd("/path/to/your/folder")
+# Find this path as follows:
+# 1. Click on the "File" tab in the bottom right pane.
+# 2. Browse to the folder on your computer that contains your R files.
+# 3. Click the gear icon and choose the option "Set as Working Directory."
+# 4. Copy the command from the Console in the bottom left pane.
+# 5. Paste the command below:
 
-setwd(wd_path)
+setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO6416_Demos")
 
-# Or do this in one step (using buttons in  File panel).
-setwd("~/Teaching/ECO6416_Fall2019/Module02")
+
+# Now, RStudio should know where your files are.
+
+
 
 # No libraries required.
 # Otherwise would have a command like the following.
@@ -50,6 +58,11 @@ setwd("~/Teaching/ECO6416_Fall2019/Module02")
 source('ECO6416_tools.R')
 # This is the same as running the ECO6416_tools.R script first.
 # It assumes that the script is saved in the same working folder.
+
+# The file ECO6416_tools.R must be in the working directory.
+# If you an error message, make sure that the file is
+# located in your working directory.
+# Also make sure that the name has not changed.
 
 
 ##################################################

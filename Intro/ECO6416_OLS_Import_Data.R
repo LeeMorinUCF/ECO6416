@@ -31,7 +31,8 @@
 # Clear workspace.
 rm(list=ls(all=TRUE))
 
-# Set working directory.
+# You need to set the working directory to the location
+# of your files.
 # setwd("/path/to/your/folder")
 # Find this path as follows:
 # 1. Click on the "File" tab in the bottom right pane.
