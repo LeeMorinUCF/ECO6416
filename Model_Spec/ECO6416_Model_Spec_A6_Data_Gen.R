@@ -8,10 +8,10 @@
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
-# College of Business Administration
+# College of Business
 # University of Central Florida
 #
-# August 21, 2023
+# August 26, 2023
 #
 ##################################################
 #
