@@ -13,7 +13,7 @@
 # College of Business
 # University of Central Florida
 #
-# August 25, 2023
+# October 18, 2021
 #
 ##################################################
 #
@@ -32,34 +32,43 @@
 # Clear workspace.
 rm(list=ls(all=TRUE))
 
+# RStudio does its work in a working directory,
+# which is a folder on your computer.
+# Display the current path to working directory, with getwd():
+getwd()
+
+
 # You need to set the working directory to the location
 # of your files.
-# setwd("/path/to/your/folder")
-# Find this path as follows:
-# 1. Click on the "File" tab in the bottom right pane.
-# 2. Browse to the folder on your computer that contains your R files.
-# 3. Click the gear icon and choose the option "Set as Working Directory."
-# 4. Copy the command from the Console in the bottom left pane.
-# 5. Paste the command below:
-
+# setwd('~/path/to/your/folder')
+# Make sure to spell it correctly and use forward slashes.
+# Make sure to have both open and closed quotes.
+# Both single and double quotes are appropriate,
+# as long as they are the same on both sides.
+# For example:
 setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO6416_Demos")
+# Note that my folder is different because it depends on where I store my files.
+
+# If an error message is displayed, verify the path and run setwd() again.
+
+# Verify that it changed the path correctly.
+getwd()
 
 
-# Now, RStudio should know where your files are.
 
-
-
+# R uses libraries, which we will use in future sessions.
 # No libraries required.
 # Otherwise would have a command like the following.
 # library(name_of_R_package)
+# We will use this later in the course.
 
 
 # Read function for sampling data.
-source('ECO6416_tools.R')
-# This is the same as running the ECO6416_tools.R script first.
+source('ECO6416_tools_3.R')
+# This is the same as running the ECO6416_tools_3.R script first.
 # It assumes that the script is saved in the same working folder.
 
-# The file ECO6416_tools.R must be in the working directory.
+# The file ECO6416_tools_3.R must be in the working directory.
 # If you an error message, make sure that the file is
 # located in your working directory.
 # Also make sure that the name has not changed.

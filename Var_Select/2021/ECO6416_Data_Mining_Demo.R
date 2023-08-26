@@ -10,10 +10,10 @@
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
-# College of Business
+# College of Business Administration
 # University of Central Florida
 #
-# August 25, 2023
+# September 9, 2020
 #
 ##################################################
 #
@@ -32,37 +32,18 @@
 # Clear workspace.
 rm(list=ls(all=TRUE))
 
-# You need to set the working directory to the location
-# of your files.
-# setwd("/path/to/your/folder")
-# Find this path as follows:
-# 1. Click on the "File" tab in the bottom right pane.
-# 2. Browse to the folder on your computer that contains your R files.
-# 3. Click the gear icon and choose the option "Set as Working Directory."
-# 4. Copy the command from the Console in the bottom left pane.
-# 5. Paste the command below:
-
-setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO6416_Demos")
-
-
-# Now, RStudio should know where your files are.
-
-
-
 # No libraries required.
 # Otherwise would have a command like the following.
 # library(name_of_R_package)
 
+# Set working directory
+# (could do this using buttons in File panel).
+setwd("C:/Users/le279259/Desktop/ECO6416_Demos/Module02")
 
 # Read function for sampling data.
 source('ECO6416_tools.R')
 # This is the same as running the ECO6416_tools.R script first.
 # It assumes that the script is saved in the same working folder.
-
-# The file ECO6416_tools.R must be in the working directory.
-# If you an error message, make sure that the file is
-# located in your working directory.
-# Also make sure that the name has not changed.
 
 
 ##################################################
@@ -116,7 +97,7 @@ table(obsns_for_estimation)
 # The relevant data in the model
 ##################################################
 
-# Call the housing_sample function from ECO6416_tools_3.R.
+# Call the housing_sample function from ECO6416_Sim_Data.R.
 housing_data <- housing_sample(beta_0, beta_income, beta_cali, beta_earthquake,
                                avg_income, sd_income, pct_in_cali, prob_earthquake,
                                sigma_2, num_obs,
@@ -141,10 +122,6 @@ table(housing_data[!obsns_for_estimation, 'in_cali'],
 # So, !obsns_for_estimation means to include only the
 # observations left out for testing the model.
 
-# Run the housing_data <- housing_sample(...)
-# block of code again if there are not earthquakes
-# in both samples.
-
 
 ##################################################
 # Generating Additional Data
@@ -157,7 +134,7 @@ table(housing_data[!obsns_for_estimation, 'in_cali'],
 #--------------------------------------------------
 
 income_variable_list <- sprintf('income_%d', seq(1:number_of_income_variables))
-# These variables are created in the ECO6416_tools_3.R script.
+# These variables are created in the House_Price_Sim_Data.R script.
 
 
 # Check how strongly the data are correlated.
@@ -178,11 +155,11 @@ plot(housing_data[, 'income'], housing_data[, 'income_1'],
 #--------------------------------------------------
 
 rainfall_variable_list <- sprintf('rainfall_%d', seq(1:number_of_rainfall_variables))
-# These variables are also created in the ECO6416_tools_3.R script.
+# These variables are also created in the House_Price_Sim_Data.R script.
 
 # Summarize the data.
 summary(housing_data)
-# Should be many rainfall variables.
+# Should be many new rainfall variables.
 
 
 # Collect all available variables into a single list.
@@ -190,7 +167,6 @@ variable_list <- c(income_variable_list, 'in_cali', 'earthquake',
                    rainfall_variable_list)
 # Note that true income is not in this list.
 # We are pretending that it is unobserved.
-
 
 ##################################################
 # Estimating the True Regression Model
