@@ -3,7 +3,7 @@
 # ECO 6416.0028 Applied Business Research Tools
 #
 # OLS Regression Demo
-# Examples of Model Specfication
+# Examples of Model Specification
 #
 # Lealand Morin, Ph.D.
 # Assistant Professor
