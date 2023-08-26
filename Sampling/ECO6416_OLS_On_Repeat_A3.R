@@ -70,29 +70,29 @@ source('ECO6416_tools.R')
 # Setting the Parameters
 ##################################################
 
-# Dependent Variable: Property values (in Millions)
+# Dependent Variable: Automobile values
 
-beta_0          <-   0.10    # Intercept
-beta_income     <-   5.00    # Slope ceofficient for income
-beta_cali       <-   0.25    # Slope coefficient for California
-beta_earthquake <- - 0.50    # Slope coefficient for earthquake
-# beta_earthquake <- - 0.00    # Slope coefficient for earthquake
+beta_0          <-   50000     # Intercept
+beta_mileage    <- -  0.20     # Slope coefficient for mileage
+beta_accident   <- -  5000     # Slope coefficient for accident
+beta_damage     <- - 20000     # Slope coefficient for damage
+# beta_damage     <-       0   # Alternate Slope coefficient for damage
 
-# Distribution of incomes (also in millions).
-avg_income <- 0.1
-sd_income <- 0.01
+# Distribution of mileage.
+avg_mileage <- 50000
+sd_mileage  <- 10000
 
-# Extra parameter for measurement error in income.
-measurement_error_income <- 0.01
+# Extra parameter for measurement error in mileage.
+measurement_error_mileage <- 10000
 
-# Fraction of dataset in California.
-pct_in_cali <- 0.5
+# Fraction of dataset in an accident.
+pct_accident <- 0.4
 
-# Frequency of earthquakes (only in California).
-prob_earthquake <- 0.05
+# Frequency of damages (only after an accident).
+prob_damage <- 0.10
 
 # Additional terms:
-sigma_2 <- 0.1        # Variance of error term
+sigma_2 <- 4000    # Variance of error term
 num_obs <- 100      # Number of observations in dataset
 
 # Set the number of replications in the simulation.
@@ -103,18 +103,20 @@ num_replications <- 1000
 # Generating the Fixed Data
 ##################################################
 
-# Call the housing_sample function from ECO6416_Sim_Data.R.
-housing_data <- housing_sample(beta_0, beta_income, beta_cali, beta_earthquake,
-                               avg_income, sd_income, pct_in_cali, prob_earthquake,
-                               sigma_2, num_obs)
+# Call the other_sample() function from ECO6416_tools_2.R.
+car_data <- other_sample(beta_0, beta_mileage, beta_accident, beta_damage,
+                         avg_mileage, sd_mileage, pct_accident, prob_damage,
+                         sigma_2, num_obs)
 
 
-# Summarize the data.
-summary(housing_data)
+# Summarize the data to inspect for data quality.
+summary(car_data)
 
-# Check that earthquakes occurred only in California:
-table(housing_data[, 'in_cali'], housing_data[, 'earthquake'])
-# Data errors are the largest cause of problems in model-building.
+# Check that damages occurred only in accident:
+table(car_data[, 'accident'], car_data[, 'damage'])
+# Data errors are the most frequent cause of problems in model-building.
+
+# Run it again if no damages occurred.
 
 
 ##################################################
@@ -123,19 +125,17 @@ table(housing_data[, 'in_cali'], housing_data[, 'earthquake'])
 ##################################################
 
 #--------------------------------------------------
-# Assume that true income is not observed but some variables
-# that are correlated with income are available.
+# Assume that true mileage is not observed but some variables
+# that are correlated with mileage are available.
 #--------------------------------------------------
 
-# Income measure 1.
-housing_data[, 'income_1'] <- 0
-housing_data[, 'income_1'] <- housing_data[, 'income'] +
-  rnorm(n = num_obs, mean = 0, sd = measurement_error_income)
+# mileage measure 1.
+car_data[, 'mileage_1'] <- car_data[, 'mileage'] +
+  rnorm(n = num_obs, mean = 0, sd = measurement_error_mileage)
 
-# Income measure 2.
-housing_data[, 'income_2'] <- 0
-housing_data[, 'income_2'] <- housing_data[, 'income'] +
-  rnorm(n = num_obs, mean = 0, sd = measurement_error_income)
+# mileage measure 2.
+car_data[, 'mileage_2'] <- car_data[, 'mileage'] +
+  rnorm(n = num_obs, mean = 0, sd = measurement_error_mileage)
 
 
 ##################################################
@@ -144,8 +144,8 @@ housing_data[, 'income_2'] <- housing_data[, 'income'] +
 ##################################################
 
 # Set the list of variables for the estimation.
-list_of_variables <- c('income', 'in_cali', 'earthquake')
-# list_of_variables <- c('income_1', 'in_cali', 'earthquake')
+list_of_variables <- c('mileage', 'accident', 'damage')
+# list_of_variables <- c('mileage_1', 'accident', 'damage')
 
 # Add beta_0 to the beginning for the full list.
 full_list_of_variables <- c('intercept', list_of_variables)
@@ -153,10 +153,10 @@ full_list_of_variables <- c('intercept', list_of_variables)
 # Create an empty data frame to store the results.
 reg_results <- data.frame(reg_num = 1:num_replications)
 reg_results[, full_list_of_variables] <- 0
-reg_results[, c('income', 'income_1', 'income_2')] <- 0
+reg_results[, c('mileage', 'mileage_1', 'mileage_2')] <- 0
 
 
-# Generate repeated realizations of the housing_data dataset.
+# Generate repeated realizations of the car_data dataset.
 for (reg_num in 1:num_replications) {
 
   # Print a progress report.
@@ -169,17 +169,17 @@ for (reg_num in 1:num_replications) {
   # Repeat again and again, replacing only the epsilon values.
 
   # Generate the error term, which includes everything we do not observe.
-  housing_data[, 'epsilon'] <- rnorm(n = num_obs, mean = 0, sd = sigma_2)
+  car_data[, 'epsilon'] <- rnorm(n = num_obs, mean = 0, sd = sigma_2)
 
   # Finally, recalculate the simulated value of house prices,
   # according to the regression equation.
-  housing_data[, 'house_price'] <-
+  car_data[, 'car_price'] <-
     beta_0 +
-    beta_income * housing_data[, 'income'] +
-    beta_cali * housing_data[, 'in_cali'] +
-    beta_earthquake * housing_data[, 'earthquake'] +
-    housing_data[, 'epsilon']
-  # Each time, this replaces the house_price with a different version
+    beta_mileage * car_data[, 'mileage'] +
+    beta_accident * car_data[, 'accident'] +
+    beta_damage * car_data[, 'damage'] +
+    car_data[, 'epsilon']
+  # Each time, this replaces the car_price with a different version
   # of the error term.
 
 
@@ -188,11 +188,11 @@ for (reg_num in 1:num_replications) {
   ##################################################
 
   # Specify the formula to estimate.
-  lm_formula <- as.formula(paste('house_price ~ ',
+  lm_formula <- as.formula(paste('car_price ~ ',
                                  paste(list_of_variables, collapse = ' + ')))
 
   # Estimate a regression model.
-  lm_full_model <- lm(data = housing_data,
+  lm_full_model <- lm(data = car_data,
                       formula = lm_formula)
   # Note that the normal format is:
   # model_name <- lm(data = name_of_dataset, formula = Y ~ X_1 + x_2 + x_K)
@@ -227,35 +227,35 @@ hist(reg_results[, 'intercept'],
      ylab = 'Frequency',
      breaks = 20)
 
-# This will be blank if income is not in the regression:
-hist(reg_results[, 'income'],
-     main = 'Distribution of beta_income',
+# This will be blank if mileage is not in the regression:
+hist(reg_results[, 'mileage'],
+     main = 'Distribution of beta_mileage',
      xlab = 'Estimated Coefficient',
      ylab = 'Frequency',
      breaks = 20)
 
-# This will be blank if income_1 is not in the regression:
-hist(reg_results[, 'income_1'],
-     main = 'Distribution of beta_income_1',
+# This will be blank if mileage_1 is not in the regression:
+hist(reg_results[, 'mileage_1'],
+     main = 'Distribution of beta_mileage_1',
      xlab = 'Estimated Coefficient',
      ylab = 'Frequency',
      breaks = 20)
 
-# This will be blank if income_2 is not in the regression:
-hist(reg_results[, 'income_2'],
-     main = 'Distribution of beta_income_2',
+# This will be blank if mileage_2 is not in the regression:
+hist(reg_results[, 'mileage_2'],
+     main = 'Distribution of beta_mileage_2',
      xlab = 'Estimated Coefficient',
      ylab = 'Frequency',
      breaks = 20)
 
-hist(reg_results[, 'in_cali'],
-     main = 'Distribution of beta_cali',
+hist(reg_results[, 'accident'],
+     main = 'Distribution of beta_accident',
      xlab = 'Estimated Coefficient',
      ylab = 'Frequency',
      breaks = 20)
 
-hist(reg_results[, 'earthquake'],
-     main = 'Distribution of beta_earthquake',
+hist(reg_results[, 'damage'],
+     main = 'Distribution of beta_damage',
      xlab = 'Estimated Coefficient',
      ylab = 'Frequency',
      breaks = 20)

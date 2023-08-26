@@ -101,7 +101,7 @@ num_obs <- 100      # Number of observations in dataset
 # Generating the Data
 ##################################################
 
-# Call the new_sample function from ECO6416_tools_2.R.
+# Call the new_sample function from ECO6416_tools.R.
 car_data <- other_sample(beta_0, beta_mileage, beta_accident, beta_damage,
                          avg_mileage, sd_mileage, pct_accident, prob_damage,
                          sigma_2, num_obs)

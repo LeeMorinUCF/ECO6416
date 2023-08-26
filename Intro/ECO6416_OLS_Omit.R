@@ -96,7 +96,7 @@ num_obs <- 100      # Number of observations in dataset
 # Generating the Data
 ##################################################
 
-# Call the housing_sample function from ECO6416_Sim_Data.R.
+# Call the housing_sample function from ECO6416_tools.R.
 housing_data <- housing_sample(beta_0, beta_income, beta_cali, beta_earthquake,
                                avg_income, sd_income, pct_in_cali, prob_earthquake,
                                sigma_2, num_obs)
