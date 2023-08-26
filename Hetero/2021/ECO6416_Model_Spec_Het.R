@@ -4,15 +4,14 @@
 #
 # OLS Regression Demo
 # Examples of Model Specification
-# to Correct for Heteroskedasticity
 #
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
-# College of Business
+# College of Business Administration
 # University of Central Florida
 #
-# August 26, 2023
+# September 10, 2020
 #
 ##################################################
 #
@@ -30,32 +29,28 @@
 # Clear workspace.
 rm(list=ls(all=TRUE))
 
-# You need to set the working directory to the location
-# of your files.
-# setwd("/path/to/your/folder")
-# Find this path as follows:
-# 1. Click on the "File" tab in the bottom right pane.
-# 2. Browse to the folder on your computer that contains your R files.
-# 3. Click the gear icon and choose the option "Set as Working Directory."
-# 4. Copy the command from the Console in the bottom left pane.
-# 5. Paste the command below:
-
-setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO6416_Demos")
-
-
-# Now, RStudio should know where your files are.
-
-
-
 # No libraries required.
 # Otherwise would have a command like the following.
 # library(name_of_R_package)
 
 
-# The csv file used below must be in the working directory.
-# If you an error message, make sure that the file is
-# located in your working directory.
-# Also make sure that the name has not changed.
+##################################################
+# Setting the Parameters
+##################################################
+
+
+# Set path for working directory.
+# Put files on desktop in a folder called ECO6416
+wd_path <- 'C:/Users/le279259/Desktop/ECO6416'
+# Modify the above line according to the specific path on your computer,
+# as in:
+# wd_path <- 'C:/Users/name/of/your/path'
+
+# Set the working directory to this path.
+setwd(wd_path)
+
+# Verify that the path was assigned correctly.
+getwd()
 
 
 ##################################################
@@ -236,7 +231,7 @@ plot(tractor_sales[, 'horsepower'],
      xlab = 'Horsepower',
      ylab = 'Residual')
 
-# It seems that the change in functional form also
+# It ssems that the change in functional form also
 # improved the distribution of the error terms.
 
 
