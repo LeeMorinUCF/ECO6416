@@ -8,18 +8,16 @@
 # Lealand Morin, Ph.D.
 # Assistant Professor
 # Department of Economics
-# College of Business
+# College of Business Administration
 # University of Central Florida
 #
-# August 26, 2023
+# September 10, 2020
 #
 ##################################################
 #
-# ECO6416_Serial_Correlation_with_Tests gives an example 
-#   of an OLS regression model with serial correlation, 
-#   detects the serial correlation, adjusts for it 
-#   by calculating Newey-West standard errors, 
-#   and corrects it with GLS estimation.
+# ECO6416_Serial_Correlation gives an example of an OLS regression model
+#   with serial correlation and corrects it with GLS estimation
+#   and by calculating Newey-West standard errors.
 #
 ##################################################
 
@@ -30,28 +28,6 @@
 
 # Clear workspace.
 rm(list=ls(all=TRUE))
-
-# You need to set the working directory to the location
-# of your files.
-# setwd("/path/to/your/folder")
-# Find this path as follows:
-# 1. Click on the "File" tab in the bottom right pane.
-# 2. Browse to the folder on your computer that contains your R files.
-# 3. Click the gear icon and choose the option "Set as Working Directory."
-# 4. Copy the command from the Console in the bottom left pane.
-# 5. Paste the command below:
-
-setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO6416_Demos")
-
-
-# Now, RStudio should know where your files are.
-
-
-# The csv file used below must be in the working directory.
-# If you an error message, make sure that the file is
-# located in your working directory.
-# Also make sure that the name has not changed.
-
 
 
 # Load library for Newey-West sandwich estimator
@@ -66,6 +42,25 @@ library(lmtest)
 
 
 ##################################################
+# Setting the Parameters
+##################################################
+
+
+# Set path for working directory.
+# Put files on desktop in a folder called ECO6416
+wd_path <- 'C:/Users/le279259/Desktop/ECO6416'
+# Modify the above line according to the specific path on your computer,
+# as in:
+# wd_path <- 'C:/Users/name/of/your/path'
+
+# Set the working directory to this path.
+setwd(wd_path)
+
+# Verify that the path was assigned correctly.
+getwd()
+
+
+##################################################
 # Loading the Data and Conducting Initial Assessment
 ##################################################
 
@@ -76,6 +71,7 @@ library(lmtest)
 # aaa: The real interest rate on AAA corporate bonds in year t.
 
 cons_data <- read.csv('CONS9.csv')
+# cons_data <- read.csv("C:/Users/le279259/Desktop/ECO6416/CONS9.csv")
 
 # Inspect the contents.
 summary(cons_data)
@@ -143,10 +139,7 @@ cons_data[, 'con_resid'] <- cons_data[, 'con'] - cons_data[, 'con_hat']
 plot(cons_data[, 'year'], cons_data[, 'con_resid'],
      main = 'OLS Residuals over Time',
      xlab = 'Year',
-     ylab = 'Residual',
-     type = 'l',
-     lwd = 2,
-     col = 'blue')
+     ylab = 'Residual')
 # Looks like positive serial correlation.
 
 
@@ -158,8 +151,7 @@ cons_data[, 'con_resid_lag'] <- c(NA, cons_data[1:(num_obs - 1), 'con_resid'])
 plot(cons_data[, 'con_resid_lag'], cons_data[, 'con_resid'],
      main = 'OLS Residuals vs Lagged Residuals',
      xlab = 'Lagged Residual',
-     ylab = 'Residual',
-     col = 'blue')
+     ylab = 'Residual')
 # Again, looks like positive serial correlation.
 
 
@@ -181,10 +173,6 @@ summary(lm_model_lm_test)
 
 # Test for coefficient on lagged residual is N*R^2.
 # Compare to critical value for chi-squared with 1 degree of freedom.
-lm_test_summ <- summary(lm_model_lm_test)
-print(num_obs*lm_test_summ$r.squared)
-# Much bigger than 3.84.
-# Conclusion: Reject H_O: No serial correlation.
 
 
 ##################################################
@@ -257,7 +245,6 @@ summary(lm_model_2)
 # Obtain estimate of autocorrelation parameter.
 rho <- coef(summary(lm_model_2))['con_resid_lag', 'Estimate']
 
-
 ##################################################
 # Create the adjusted GLS variables
 ##################################################
@@ -274,7 +261,7 @@ cons_data[, 'aaa_GLS'] <- cons_data[, 'aaa'] -
 
 # The intercept coefficient is not important but it doesn't hurt
 # to change the units to match the original regression.
-cons_data[, 'Intercept'] <- 1 - rho*1
+cons_data[, 'Intercept'] <- 1 - rho
 
 
 ##################################################
