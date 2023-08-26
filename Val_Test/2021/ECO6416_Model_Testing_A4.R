@@ -70,28 +70,29 @@ source('ECO6416_tools.R')
 # Setting the Parameters
 ##################################################
 
-# Dependent Variable: Property values (in Millions)
+# Dependent Variable: Automobile values
 
-# Parameters:
-beta_0          <-   0.10    # Intercept
-beta_income     <-   5.00    # Slope ceofficient for income
-beta_cali       <-   0.25    # Slope coefficient for California
-beta_earthquake <- - 0.50    # Slope coefficient for earthquake
-# beta_earthquake <- - 0.00    # Slope coefficient for earthquake
+beta_0          <-   50000     # Intercept
+beta_mileage    <- -  0.20     # Slope coefficient for mileage
+beta_accident   <- -  5000     # Slope coefficient for accident
+beta_damage     <- - 20000     # Slope coefficient for damage
+# beta_damage     <-       0   # Alternate Slope coefficient for damage
 
-# Distribution of incomes (also in millions).
-avg_income <- 0.1
-sd_income <- 0.01
+# Distribution of mileage.
+avg_mileage <- 50000
+sd_mileage  <- 10000
 
-# Fraction of dataset in California.
-pct_in_cali <- 0.5
+# Extra parameter for measurement error in mileage.
+measurement_error_mileage <- 0.01
 
-# Frequency of earthquakes (only in California).
-# prob_earthquake <- 0.05
-prob_earthquake <- 0.15 # More earthquakes to illustrate.
+# Fraction of dataset in an accident.
+pct_accident <- 0.4
+
+# Frequency of damages (only after an accident).
+prob_damage <- 0.20 # More damage to illustrate the difference.
 
 # Additional terms:
-sigma_2 <- 0.1        # Variance of error term
+sigma_2 <- 4000    # Variance of error term
 num_obs <- 200        # Number of observations in entire dataset
 num_obs_estn <- 100   # Number of observations for estimation.
 # Notice num_obs is twice as large, saving half for out-of-sample testing.
@@ -107,28 +108,33 @@ table(obsns_for_estimation)
 # Generating the Data
 ##################################################
 
-# Call the housing_sample function from ECO6416_tools.R.
-housing_data <- housing_sample(beta_0, beta_income, beta_cali, beta_earthquake,
-                               avg_income, sd_income, pct_in_cali, prob_earthquake,
-                               sigma_2, num_obs)
+# Call the other_sample() function from ECO6416_tools.R.
+car_data <- other_sample(beta_0, beta_mileage, beta_accident, beta_damage,
+                         avg_mileage, sd_mileage, pct_accident, prob_damage,
+                         sigma_2, num_obs)
 
 # Summarize the data.
-summary(housing_data)
+summary(car_data)
 
-# Check that earthquakes occurred only in California:
-table(housing_data[, 'in_cali'], housing_data[, 'earthquake'])
+# Check that damages occurred only in accidents:
+table(car_data[, 'accident'], car_data[, 'damage'])
 # Data errors are the largest cause of problems in model-building.
 
 # Check for the subsamples for estimation and testing.
 # Estimation sample:
-table(housing_data[obsns_for_estimation, 'in_cali'],
-      housing_data[obsns_for_estimation, 'earthquake'])
+table(car_data[obsns_for_estimation, 'accident'],
+      car_data[obsns_for_estimation, 'damage'])
 # Testing sample:
-table(housing_data[!obsns_for_estimation, 'in_cali'],
-      housing_data[!obsns_for_estimation, 'earthquake'])
+table(car_data[!obsns_for_estimation, 'accident'],
+      car_data[!obsns_for_estimation, 'damage'])
 # ! means 'not'.
 # So, !obsns_for_estimation means to include only the
 # observations left out for testing the model.
+
+# Run it again up to here if you don't observe damages
+# in both samples.
+
+
 
 ##################################################
 # Estimating the Regression Model
@@ -138,22 +144,22 @@ table(housing_data[!obsns_for_estimation, 'in_cali'],
 ##################################################
 
 # Estimate a regression model.
-lm_no_earthquakes <- lm(data = housing_data[obsns_for_estimation, ],
+lm_no_damages <- lm(data = car_data[obsns_for_estimation, ],
                         # Notice only first set of observations (training dataset).
-                        formula = house_price ~ income + in_cali) # earthquake removed.
+                        formula = car_price ~ mileage + accident) # damage removed.
 
 # Output the results to screen.
-summary(lm_no_earthquakes)
+summary(lm_no_damages)
 
 
 ##################################################
-# Calculate the predictions of the 'No earthquakes' model
+# Calculate the predictions of the 'No damages' model
 ##################################################
 
 # Store predictions for the entire dataset (both training and testing)
 # based on the model built on only the training dataset.
-housing_data[, 'prediction'] <- predict(lm_no_earthquakes,
-                                        newdata = housing_data) # All observations, including testing sample.
+car_data[, 'prediction'] <- predict(lm_no_damages,
+                                        newdata = car_data) # All observations, including testing sample.
 
 
 ##################################################
@@ -163,14 +169,14 @@ housing_data[, 'prediction'] <- predict(lm_no_earthquakes,
 ##################################################
 
 # Estimate a regression model.
-lm_testing_no_earthquakes_1 <- lm(data = housing_data[!obsns_for_estimation, ],
+lm_testing_no_damages_1 <- lm(data = car_data[!obsns_for_estimation, ],
                     # Notice only second set of observations (testing dataset).
-                    formula = house_price ~ prediction + in_cali + earthquake)
-# Dropped income because of multicollinearity.
-# Want to test accuracy for California and relevance of earthquakes.
+                    formula = car_price ~ prediction + accident + damage)
+# Dropped mileage because of multicollinearity.
+# Want to test accuracy for accidents and relevance of damages.
 
 # Output the results to screen.
-summary(lm_testing_no_earthquakes_1)
+summary(lm_testing_no_damages_1)
 
 
 
@@ -180,7 +186,7 @@ summary(lm_testing_no_earthquakes_1)
 #
 # Exercise 1:
 #
-# Observe the values of the coefficients for California and earthquakes.
+# Observe the values of the coefficients for accidents and damages.
 # Then compare these to the bias recorded for the first (misspecified) regression.
 #
 ##################################################
@@ -192,9 +198,9 @@ summary(lm_testing_no_earthquakes_1)
 #
 # Exercise 2:
 #
-# Estimate the true model (including earthquakes, see below).
+# Estimate the true model (including damages, see below).
 # Then perform the second regression to test the correct model.
-# Observe the values of the coefficients for California and earthquakes.
+# Observe the values of the coefficients for accidents and damages.
 # Compare the results with the test of the incorrect model above.
 #
 ##################################################
@@ -209,9 +215,9 @@ summary(lm_testing_no_earthquakes_1)
 
 
 # Estimate a regression model.
-lm_full_model <- lm(data = housing_data[obsns_for_estimation, ],
+lm_full_model <- lm(data = car_data[obsns_for_estimation, ],
                         # Notice only first set of observations (training dataset).
-                        formula = house_price ~ income + in_cali + earthquake)
+                        formula = car_price ~ mileage + accident + damage)
 
 # Output the results to screen.
 summary(lm_full_model)
@@ -219,8 +225,8 @@ summary(lm_full_model)
 
 # Store predictions for the entire dataset (both training and testing)
 # based on the model built on only the training dataset.
-housing_data[, 'prediction_full'] <- predict(lm_full_model,
-                                        newdata = housing_data) # All observations, including testing sample.
+car_data[, 'prediction_full'] <- predict(lm_full_model,
+                                        newdata = car_data) # All observations, including testing sample.
 
 
 ##################################################
@@ -230,11 +236,11 @@ housing_data[, 'prediction_full'] <- predict(lm_full_model,
 ##################################################
 
 # Estimate a regression model.
-lm_testing_full_model_1 <- lm(data = housing_data[!obsns_for_estimation, ],
+lm_testing_full_model_1 <- lm(data = car_data[!obsns_for_estimation, ],
                          # Notice only second set of observations (testing dataset).
-                         formula = house_price ~ prediction_full + in_cali + earthquake)
-# Dropped income because of multicollinearity.
-# Want to test accuracy for California and relevance of earthquakes.
+                         formula = car_price ~ prediction_full + accident + damage)
+# Dropped mileage because of multicollinearity.
+# Want to test accuracy for accidents and relevance of damages.
 
 # Output the results to screen.
 summary(lm_testing_full_model_1)
@@ -248,13 +254,13 @@ summary(lm_testing_full_model_1)
 # Use the difference as the regressand.
 ##################################################
 
-housing_data[, 'prediction_diff_full']  <- housing_data[, 'house_price'] -
-  housing_data[, 'prediction_full'] # Predictions from full model.
+car_data[, 'prediction_diff_full']  <- car_data[, 'car_price'] -
+  car_data[, 'prediction_full'] # Predictions from full model.
 
 # Estimate a regression model.
-lm_testing_full_model_2 <- lm(data = housing_data[!obsns_for_estimation, ],
+lm_testing_full_model_2 <- lm(data = car_data[!obsns_for_estimation, ],
                          # Notice only second set of observations (testing dataset).
-                         formula = prediction_diff_full ~ income + in_cali + earthquake)
+                         formula = prediction_diff_full ~ mileage + accident + damage)
 
 
 # Output the results to screen.
@@ -266,42 +272,40 @@ summary(lm_testing_full_model_2)
 #
 # Exercise 3:
 #
-# Observe the values of the coefficients for California and earthquakes.
+# Observe the values of the coefficients for accidents and damages.
 # Notice what happens when the correct model has been estimated.
 #
 ##################################################
 
 
-
 ##################################################
 # Now use this approach to reconsider the original
 # (misspecified) model in which we omitted the
-# earthquake variable.
+# damage variable.
 ##################################################
 
 
-
-housing_data[, 'prediction_diff']  <- housing_data[, 'house_price'] -
-  housing_data[, 'prediction'] # Predictions from no_earthquakes model.
+car_data[, 'prediction_diff']  <- car_data[, 'car_price'] -
+  car_data[, 'prediction'] # Predictions from no_damages model.
 
 # Estimate a regression model.
-lm_testing_no_earthquakes_2 <- lm(data = housing_data[!obsns_for_estimation, ],
+lm_testing_no_damages_2 <- lm(data = car_data[!obsns_for_estimation, ],
                               # Notice only second set of observations (testing dataset).
-                              formula = prediction_diff ~ income + in_cali + earthquake)
+                              formula = prediction_diff ~ mileage + accident + damage)
 
 
-summary(lm_testing_no_earthquakes_2)
+summary(lm_testing_no_damages_2)
+
 
 
 ##################################################
 #
 # Exercise 4:
 #
-# Observe the values of the coefficients for California and earthquakes.
+# Observe the values of the coefficients for accidents and damage.
 # Then compare these to the bias recorded for the first (misspecified) regression.
 #
 ##################################################
-
 
 
 
