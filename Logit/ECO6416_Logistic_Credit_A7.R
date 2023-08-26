@@ -3,7 +3,7 @@
 # ECO 6416.0028 Applied Business Research Tools
 #
 # Logistic Regression Demo
-# Examples of Model Specification: Logistic vs OLS
+# Examples of Model Specification
 #
 # Lealand Morin, Ph.D.
 # Assistant Professor
@@ -11,11 +11,11 @@
 # College of Business
 # University of Central Florida
 #
-# October 31, 2021
+# August 26, 2023
 #
 ##################################################
 #
-# Logistic_Credit gives an example of OLS
+# ECO6416_Logistic_Credit gives an example of OLS
 #   and logistic regression using data imported from a spreadsheet.
 #
 # The variables in the dataset credit_data.csv are as follows:
@@ -47,17 +47,30 @@
 # Clear workspace.
 rm(list=ls(all=TRUE))
 
-# Set working directory.
-getwd()
+# You need to set the working directory to the location
+# of your files.
+# setwd("/path/to/your/folder")
+# Find this path as follows:
+# 1. Click on the "File" tab in the bottom right pane.
+# 2. Browse to the folder on your computer that contains your R files.
+# 3. Click the gear icon and choose the option "Set as Working Directory."
+# 4. Copy the command from the Console in the bottom left pane.
+# 5. Paste the command below:
 
 setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO6416_Demos")
 
-# Verify that it changed the path correctly.
-getwd()
+
+# Now, RStudio should know where your files are.
+
+
+# The csv file used below must be in the working directory.
+# If you an error message, make sure that the file is
+# located in your working directory.
+# Also make sure that the name has not changed.
 
 # Load library for computing the AUROC.
 # You will have to install this package the first time.
-# Press the "Install" button or run the following:
+# Press the "Install" button or run the following (without the #):
 # install.packages('pROC')
 library(pROC)
 
