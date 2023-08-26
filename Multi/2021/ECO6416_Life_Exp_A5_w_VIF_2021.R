@@ -3,7 +3,7 @@
 # ECO 6416: Applied Business Research Tools
 #
 # OLS Regression Demo
-# Checking for Multicollinearity
+# Examples of Model Specfication
 #
 # Lealand Morin, Ph.D.
 # Assistant Professor
@@ -11,7 +11,7 @@
 # College of Business Administration
 # University of Central Florida
 #
-# August 26, 2023
+# September 10, 2020
 #
 ##################################################
 #
@@ -30,32 +30,27 @@
 # Clear workspace.
 rm(list=ls(all=TRUE))
 
+# RStudio does its work in a working directory,
+# which is a folder on your computer.
+# Display the current path to working directory, with getwd():
+getwd()
+
+
 # You need to set the working directory to the location
 # of your files.
-# setwd("/path/to/your/folder")
-# Find this path as follows:
-# 1. Click on the "File" tab in the bottom right pane.
-# 2. Browse to the folder on your computer that contains your R files.
-# 3. Click the gear icon and choose the option "Set as Working Directory."
-# 4. Copy the command from the Console in the bottom left pane.
-# 5. Paste the command below:
-
+# setwd('~/path/to/your/folder')
+# Make sure to spell it correctly and use forward slashes.
+# Make sure to have both open and closed quotes.
+# Both single and double quotes are appropriate,
+# as long as they are the same on both sides.
+# For example:
 setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO6416_Demos")
+# Note that my folder is different because it depends on where I store my files.
 
+# If an error message is displayed, verify the path and run setwd() again.
 
-# Now, RStudio should know where your files are.
-
-
-
-# No libraries required.
-# Otherwise would have a command like the following.
-# library(name_of_R_package)
-
-
-# The csv file used below must be in the working directory.
-# If you an error message, make sure that the file is
-# located in your working directory.
-# Also make sure that the name has not changed.
+# Verify that it changed the path correctly.
+getwd()
 
 
 ##################################################
@@ -63,6 +58,7 @@ setwd("C:/Users/le279259/OneDrive - University of Central Florida/Desktop/ECO641
 ##################################################
 
 life_exp_data <- read.csv('LIFE5.csv')
+# life_exp_data <- read.csv("C:/Users/le279259/Desktop/ECO6416_Demos/Data/LIFE5.csv")
 
 # Inspect the contents.
 summary(life_exp_data)
